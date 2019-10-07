@@ -1,3 +1,3 @@
 # API
 Project : **Cash manager**
-*Backend API using JAVA*
+> Backend API using JAVA
