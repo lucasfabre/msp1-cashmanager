@@ -47,4 +47,4 @@ test $BUILD -eq 1 && cmbuild
 test $TEST -eq 1 && cmtest
 test $PACKAGE -eq 1 && cmpackage
 test $BUILD_DOCKER -eq 1 && cmdocker
-test $KEEP_CACHE -eq 0 && docker volume rm $BUILD_CACHE_VOLUME &> /dev/null
+test $KEEP_CACHE -eq 0 && docker volume rm $BUILD_CACHE_VOLUME &> /dev/null || true
