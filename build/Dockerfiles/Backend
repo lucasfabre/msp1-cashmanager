@@ -1,0 +1,5 @@
+FROM openjdk:11.0-jre-slim
+
+COPY ./cashmanager-backend.jar /cashmanager-backend.jar
+
+ENTRYPOINT java -jar /cashmanager-backend.jar

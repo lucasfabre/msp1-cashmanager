@@ -1,0 +1,4 @@
+
+FROM httpd:latest
+
+COPY ./cashmanager.apk /usr/local/apache2/htdocs/client.apk

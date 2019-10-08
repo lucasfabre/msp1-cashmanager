@@ -1,0 +1,46 @@
+#!/bin/bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. >/dev/null 2>&1 && pwd )"
+
+function cmhelp {
+    cat <<EOF
+commands:
+    test            test the cashmanager backend
+    package         package the application in the dist/cashmanager-backend.jar
+    build-docker    build the docker image
+flags:
+    --keep-cache    preserve the mvn cache
+EOF
+}
+
+function cmbuild {
+    docker run $DOCKER_RUN_ARGS openjdk:11.0-jdk-slim bash -c "cd '/app/backend';
+    set -e;
+    ./mvnw compile;
+    "
+}
+
+function cmtest {
+    docker run $DOCKER_RUN_ARGS openjdk:11.0-jdk-slim bash -c "cd '/app/backend';
+    set -e;
+    ./mvnw test;
+    "
+}
+
+function cmpackage {
+    docker run $DOCKER_RUN_ARGS openjdk:11.0-jdk-slim bash -c "cd '/app/backend';
+    set -e;
+    ./mvnw package;
+    cp /app/backend/target/cashmanager-0.0.1.jar /app/dist/cashmanager-backend.jar;
+    chown $UID:$GID /app/dist/cashmanager-backend.jar;
+    "
+}
+
+function cmdocker {
+    test -f $DIR/dist/cashmanager-backend.jar || cmpackage
+    docker build $DIR/dist/ -t cashmanager-backend -f $DIR/build/Dockerfiles/Backend
+}
+
+source $DIR/build/common.sh
+exit 0
