@@ -8,7 +8,8 @@ BUILD=0
 BUILD_DOCKER=0
 KEEP_CACHE=0
 BUILD_CACHE_VOLUME=cashmanager-buildcache
-DOCKER_RUN_ARGS="--rm -v $BUILD_CACHE_VOLUME:/root/ -v $DIR:/app -it"
+
+DOCKER_RUN_ARGS="--rm -v $BUILD_CACHE_VOLUME:/root/ -v $DIR:/app -i"
 
 GID=$(id -g)
 

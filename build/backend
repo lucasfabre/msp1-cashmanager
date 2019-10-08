@@ -15,21 +15,21 @@ EOF
 }
 
 function cmbuild {
-    docker run --rm -v $BUILD_CACHE_VOLUME:/root/ -v $DIR:/app -it openjdk:11.0-jdk-slim bash -c "cd '/app/backend';
+    docker run $DOCKER_RUN_ARGS openjdk:11.0-jdk-slim bash -c "cd '/app/backend';
     set -e;
     ./mvnw compile;
     "
 }
 
 function cmtest {
-    docker run --rm -v $BUILD_CACHE_VOLUME:/root/ -v $DIR:/app -it openjdk:11.0-jdk-slim bash -c "cd '/app/backend';
+    docker run $DOCKER_RUN_ARGS openjdk:11.0-jdk-slim bash -c "cd '/app/backend';
     set -e;
     ./mvnw test;
     "
 }
 
 function cmpackage {
-    docker run --rm -v $BUILD_CACHE_VOLUME:/root/ -v $DIR:/app -it openjdk:11.0-jdk-slim bash -c "cd '/app/backend';
+    docker run $DOCKER_RUN_ARGS openjdk:11.0-jdk-slim bash -c "cd '/app/backend';
     set -e;
     ./mvnw package;
     cp /app/backend/target/cashmanager-0.0.1.jar /app/dist/cashmanager-backend.jar;
