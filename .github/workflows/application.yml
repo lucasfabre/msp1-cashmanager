@@ -1,0 +1,34 @@
+name: Backend
+
+on: [push]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: build the backend
+      run:  ./build/application --keep-cache build
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: test the backend
+      run:  ./build/application --keep-cache test
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: package the backend
+      run:  ./build/application --keep-cache package
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: build the backend docker image
+      run:  ./build/application --keep-cache build-docker
+

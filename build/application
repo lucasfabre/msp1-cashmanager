@@ -14,6 +14,13 @@ flags:
 EOF
 }
 
+function cmbuild {
+    docker run $DOCKER_RUN_ARGS alvrme/alpine-android:android-29 bash -c "cd '/app/application';
+    set -e;
+    ./gradlew --no-daemon assembleDebug;
+    "
+}
+
 function cmtest {
     docker run $DOCKER_RUN_ARGS alvrme/alpine-android:android-29 bash -c "cd '/app/application';
     set -e;
