@@ -1,0 +1,50 @@
+#!/bin/bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. >/dev/null 2>&1 && pwd )"
+
+function cmhelp {
+    cat <<EOF
+commands:
+    test            test the application
+    package         package the application in the apk
+    build-docker    build the docker image
+flags:
+    --keep-cache    preserve the mvn cache
+EOF
+}
+
+function cmtest {
+    docker run $DOCKER_RUN_ARGS alvrme/alpine-android:android-29 bash -c "cd '/app/application';
+    set -e;
+    ./gradlew --no-daemon test;
+    "
+}
+
+function cmpackage {
+    docker run $DOCKER_RUN_ARGS \
+    -e CMUID=$UID -e GID -e ANDROID_KEYSTORE_FILE -e ANDROID_KEYSTORE_PASSWORD -e ANDROID_KEY_ALIAS -e ANDROID_KEY_PASSWORD \
+    alvrme/alpine-android:android-29 bash -c 'cd /app/application;
+    set -e;
+    echo $ANDROID_KEYSTORE_FILE | base64 -d > releasekey.keystore
+    ./gradlew --no-daemon assembleRelease \
+    -Pandroid.injected.signing.store.file=/app/application/releasekey.keystore \
+    -Pandroid.injected.signing.store.password=$ANDROID_KEYSTORE_PASSWORD \
+    -Pandroid.injected.signing.key.alias=$ANDROID_KEY_ALIAS \
+    -Pandroid.injected.signing.key.password=$ANDROID_KEY_PASSWORD
+    cp /app/application/app/build/outputs/apk/release/app-release.apk /app/dist/cashmanager.apk
+    chown $CMUID:$GID /app/dist/cashmanager.apk;
+    '
+}
+
+function cmdocker {
+    test -f $DIR/dist/cashmanager-backend.jar || mvnpackage
+    docker build $DIR/dist/ -t cashmanager-backend -f $DIR/build/Dockerfiles/Backend
+}
+
+source $DIR/build/common.sh
+exit 0
+
+
+
+

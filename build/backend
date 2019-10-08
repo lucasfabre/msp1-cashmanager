@@ -3,15 +3,7 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. >/dev/null 2>&1 && pwd )"
 
-TEST=0
-PACKAGE=0
-BUILD_DOCKER=0
-KEEP_CACHE=0
-MAVEN_CACHE_VOLUME=mvncache
-
-GID=$(id -g)
-
-function print_help {
+function cmhelp {
     cat <<EOF
 commands:
     test            test the cashmanager backend
@@ -22,44 +14,15 @@ flags:
 EOF
 }
 
-for i in "$@"
-do
-    case $i in
-        help)
-            print_help
-            exit 0
-        ;;
-        test)
-            TEST=1
-        ;;
-        package)
-            PACKAGE=1
-        ;;
-        build-docker)
-            BUILD_DOCKER=1
-        ;;
-        --keep-cache)
-            KEEP_CACHE=1
-        ;;
-    esac
-done
-
-# Remove old dist folder 
-rm -Rf $DIR/dist
-# Create a .m2 cache
-docker volume inspect $MAVEN_CACHE_VOLUME &> /dev/null || docker volume create $MAVEN_CACHE_VOLUME &> /dev/null
-# Create the dist folder
-mkdir $DIR/dist
-
-function mvntest {
-    docker run --rm -v $MAVEN_CACHE_VOLUME:/root/.m2 -v $DIR:/app -it openjdk:11.0-jdk-slim bash -c "cd '/app/backend';
+function cmtest {
+    docker run --rm -v $BUILD_CACHE_VOLUME:/root/ -v $DIR:/app -it openjdk:11.0-jdk-slim bash -c "cd '/app/backend';
     set -e;
     ./mvnw test
     "
 }
 
-function mvnpackage {
-    docker run --rm -v $MAVEN_CACHE_VOLUME:/root/.m2 -v $DIR:/app -it openjdk:11.0-jdk-slim bash -c "cd '/app/backend';
+function cmpackage {
+    docker run --rm -v $BUILD_CACHE_VOLUME:/root/ -v $DIR:/app -it openjdk:11.0-jdk-slim bash -c "cd '/app/backend';
     set -e;
     ./mvnw package;
     cp /app/backend/target/cashmanager-0.0.1.jar /app/dist/cashmanager-backend.jar;
@@ -67,13 +30,10 @@ function mvnpackage {
     "
 }
 
-function build_docker {
+function cmdocker {
     test -f $DIR/dist/cashmanager-backend.jar || mvnpackage
     docker build $DIR/dist/ -t cashmanager-backend -f $DIR/build/Dockerfiles/Backend
 }
 
-test $TEST -eq 1 && mvntest
-test $PACKAGE -eq 1 && mvnpackage
-test $BUILD_DOCKER -eq 1 && build_docker
-test $KEEP_CACHE -eq 0 && docker volume rm $MAVEN_CACHE_VOLUME &> /dev/null
+source $DIR/build/common.sh
 exit 0
