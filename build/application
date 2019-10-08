@@ -38,8 +38,8 @@ function cmpackage {
 }
 
 function cmdocker {
-    test -f $DIR/dist/cashmanager-backend.jar || mvnpackage
-    docker build $DIR/dist/ -t cashmanager-backend -f $DIR/build/Dockerfiles/Backend
+    test -f $DIR/dist/cashmanager.apk || cmpackage
+    docker build $DIR/dist/ -t cashmanager-client-server -f $DIR/build/Dockerfiles/AppServer
 }
 
 source $DIR/build/common.sh

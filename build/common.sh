@@ -1,6 +1,6 @@
 set -e
 
-source $DIR/.env
+source $DIR/build/.env
 
 TEST=0
 PACKAGE=0

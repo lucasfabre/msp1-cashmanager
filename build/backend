@@ -31,7 +31,7 @@ function cmpackage {
 }
 
 function cmdocker {
-    test -f $DIR/dist/cashmanager-backend.jar || mvnpackage
+    test -f $DIR/dist/cashmanager-backend.jar || cmpackage
     docker build $DIR/dist/ -t cashmanager-backend -f $DIR/build/Dockerfiles/Backend
 }
 

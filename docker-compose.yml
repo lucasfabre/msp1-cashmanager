@@ -6,3 +6,9 @@ services:
     restart: "no"
     ports:
       - 8080:8080
+
+  appserver:
+    image: cashmanager-client-server
+    restart: "no"
+    ports:
+      - 8081:80
