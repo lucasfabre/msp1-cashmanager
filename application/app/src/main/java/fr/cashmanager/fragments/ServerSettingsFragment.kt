@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import fr.cashmanager.views.ServerSettingsViewModel
 
+class ServerSettingsFragment {
+/*
 class ServerSettingsFragment : Fragment() {
+
     private val viewModel: ServerSettingsViewModel by viewModels()
 
     override fun onCreateView(
@@ -24,4 +27,6 @@ class ServerSettingsFragment : Fragment() {
             // update UI
         }
     }
+}
+ */
 }
