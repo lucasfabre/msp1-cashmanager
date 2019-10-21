@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.cashmanager.accounts.Account;
 import fr.cashmanager.accounts.BankAccountManagementService;
+import fr.cashmanager.user.User;
+import fr.cashmanager.user.UserManagementService;
 
 /**
  * LocalFileConfig
@@ -18,21 +20,26 @@ public class LocalFileConfig implements IConfig {
     
     // We use a static unique object mapper because the object mapper is slow to instanciate
     private static ObjectMapper mapper = new ObjectMapper();
-    private BankAccountManagementService bankAccountManagementService;
+
+    private BankAccountManagementService    bankAccountManagementService;
+    private UserManagementService           userManagementService;
 
     /**
      * Local File DTO used for deserializing the JSON config file;
      */
     static private class LocalFileDTO {
         public List<Account> accounts;
+        public List<User>    users;
     }
 
-    public LocalFileConfig(BankAccountManagementService bankAccountManagementService) {
+    public LocalFileConfig(BankAccountManagementService bankAccountManagementService,
+                            UserManagementService userManagementService) {
         String localfilePropertyValue = System.getProperty("cashmanager.config.localfile");
         if (localfilePropertyValue != null) {
             this.filePathAString = localfilePropertyValue;
         }
         this.bankAccountManagementService = bankAccountManagementService;
+        this.userManagementService = userManagementService;
     }
 
     /**
@@ -45,9 +52,12 @@ public class LocalFileConfig implements IConfig {
             throw new Exception("No config file provided, please set the cashmanager.config.localfile property");
         }
         LocalFileDTO fileConfig = mapper.readValue(new File(filePathAString), LocalFileDTO.class);
-        for (Account account : fileConfig.accounts) {
-            bankAccountManagementService.registerNewAcount(account.getId(), account.getBalance());
-        }
+        fileConfig.accounts.forEach((account) ->
+            bankAccountManagementService.registerNewAcount(account.getId(), account.getBalance())
+        );
+        fileConfig.users.forEach((user) ->
+            userManagementService.registerUser(user.getId(), user.getPassword())
+        );
     }
     
 }
