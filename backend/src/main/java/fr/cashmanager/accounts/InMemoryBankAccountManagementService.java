@@ -4,14 +4,9 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 /**
  * InMemoryBankAccountManagementService
  */
-@Service("BankAccountManagementService")
-@Scope("singleton")
 public class InMemoryBankAccountManagementService extends BankAccountManagementService {
 
     /**

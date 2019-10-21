@@ -1,19 +1,14 @@
 package fr.cashmanager.payment;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import fr.cashmanager.accounts.BankAccountManagementService;
 
 /**
  * PaymentProcessingService
  */
-@Service
 public class PaymentProcessingService {
 
     private BankAccountManagementService bankAccountManagementService;
 
-    @Autowired(required = true)
     public PaymentProcessingService(BankAccountManagementService bankAccountManagementService) {
         this.bankAccountManagementService = bankAccountManagementService;
     }
@@ -22,7 +17,7 @@ public class PaymentProcessingService {
      * Process a Transaction
      * @param payment the transaction to process
      */
-    public void processTransaction(IPayment payment) {
+    public void processTransaction(IPayment payment) throws Exception {
         final Double amount = payment.getAmount();
         bankAccountManagementService.debitAccount(payment.getDebtor(), amount);
         try {

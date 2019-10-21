@@ -4,9 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.cashmanager.accounts.BankAccountManagementService;
 import fr.cashmanager.accounts.InMemoryBankAccountManagementService;
@@ -14,10 +11,8 @@ import fr.cashmanager.accounts.InMemoryBankAccountManagementService;
 /**
  * PaymentProcessingServiceTests
  */
-@RunWith(SpringRunner.class)
 public class PaymentProcessingServiceTests {
 
-    @Autowired
     private static BankAccountManagementService bankAccountManagementService;
 
     @Before
@@ -29,24 +24,21 @@ public class PaymentProcessingServiceTests {
      * Test the transacton Processing
      */
     @Test
-    public void testProcessTransaction() {
+    public void testProcessTransaction() throws Exception {
         // Init the banks accounts
         bankAccountManagementService.registerNewAcount("1", 120.0);
         bankAccountManagementService.registerNewAcount("2", 90.0);
 
         // create the transaction
         IPayment payment = new IPayment(){
-            @Override
             public String getDebtor() {
                 return "1";
             }
         
-            @Override
             public String getCreditor() {
                 return "2";
             }
         
-            @Override
             public Double getAmount() {
                 return 20.0;
             }
@@ -72,17 +64,14 @@ public class PaymentProcessingServiceTests {
 
         // create the transaction
         IPayment payment = new IPayment(){
-            @Override
             public String getDebtor() {
                 return "1";
             }
         
-            @Override
             public String getCreditor() {
                 return "2";
             }
         
-            @Override
             public Double getAmount() {
                 return 20.0;
             }

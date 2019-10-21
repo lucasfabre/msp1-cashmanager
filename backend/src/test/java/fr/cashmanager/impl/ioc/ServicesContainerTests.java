@@ -22,11 +22,10 @@ public class ServicesContainerTests extends TestCase {
     }
 
     public void testSimpleFactory() {
-        StringBuilder value = new StringBuilder("il etait une fois...");
+        final StringBuilder value = new StringBuilder("il etait une fois...");
 
         // Create the factory
         ServiceFactory<String> factory = new ServiceFactory<String>() {
-            @Override
             public String instanciate() {
                 return value.toString();
             }
