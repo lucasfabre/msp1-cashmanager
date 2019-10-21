@@ -49,7 +49,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:hint="Server" />
+                android:hint="Login" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

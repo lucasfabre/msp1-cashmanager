@@ -3,10 +3,13 @@ package fr.cashmanager
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.IsoDep
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 
+@RequiresApi(Build.VERSION_CODES.KITKAT)
 class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     private var nfcAdapter: NfcAdapter? = null
     private var textView: TextView? = null
@@ -20,7 +23,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.server_settings)
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         textView = findViewById(R.id.textView)
     }
