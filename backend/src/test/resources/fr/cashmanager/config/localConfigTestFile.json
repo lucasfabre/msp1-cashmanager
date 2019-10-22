@@ -4,5 +4,8 @@
     ],
     "users": [
         { "id": "user1", "password": "p1" }
-    ]
+    ],
+    "preferences": {
+        "server.port": "server port"
+    }
 }

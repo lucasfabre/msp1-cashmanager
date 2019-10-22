@@ -23,26 +23,27 @@ public class LocalFileConfigTest extends TestCase {
     private IConfig configManager;
 
     public void setUp() throws IOException {
+        // copy the test file
+        testfilepath = File.createTempFile("cashmanagerTest", null).getAbsolutePath();
+        System.setProperty("cashmanager.config.localfile", testfilepath);
+        TestHelper.copyResource("/fr/cashmanager/config/localConfigTestFile.json", testfilepath, this.getClass());
         // init the service
         bankAccountManagementService = new InMemoryBankAccountManagementService();
         userManagementService = new InMemoryUserManagementService();
         configManager = new LocalFileConfig(bankAccountManagementService, userManagementService);
-        // copy the test file
-        testfilepath = File.createTempFile("temp", null).getAbsolutePath();
-        System.setProperty("cashmanager.config.localfile", testfilepath);
-        TestHelper.copyResource("/fr/cashmanager/config/localConfigTestFile.json", testfilepath, this.getClass());
     }
 
     /**
      * test if the config initialize the services
      * @throws Exception
      */
-    public void configTest() throws Exception {
+    public void testConfig() throws Exception {
         configManager.configure();
         assertEquals(Double.valueOf(12.04), bankAccountManagementService.getAccountBalance("acc1"));
         User user = userManagementService.authenticateUser("user1", "p1");
         assertEquals("user1", user.getId());
         assertEquals("p1", user.getPassword());
+        assertEquals("server port", configManager.getPreference(Preference.SERVER_PORT));
     }
 
     public void testNoConfigFileProvided() throws Exception {

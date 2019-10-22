@@ -19,7 +19,7 @@ public class InMemoryUserManagementService extends UserManagementService {
     @Override
     public User authenticateUser(String userId, String password) {
         return users.stream()
-            .filter((User user) -> user.getId() == userId && user.getPassword() == password)
+            .filter((User user) -> user.getId().equals(userId) && user.getPassword().equals(password))
             .findFirst().orElse(null);
     }
 
