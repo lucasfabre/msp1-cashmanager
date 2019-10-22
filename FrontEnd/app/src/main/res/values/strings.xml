@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">CashManager</string>
+    <string name="title_market">Market</string>
+    <string name="title_panier">Panier</string>
+    <string name="title_parameter">Parameter</string>
+    <string name="servername">ServerName</string>
+    <string name="serverpassword">ServerPassword</string>
+</resources>
