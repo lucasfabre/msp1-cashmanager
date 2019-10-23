@@ -7,8 +7,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.epitech.cashmanager.ui.market.MarketFragment
-import com.epitech.cashmanager.ui.market.dummy.DummyContent
+import com.epitech.cashmanager.dummy.DummyContent
+import com.epitech.cashmanager.fragments.MarketFragment
 
 class MainActivity : AppCompatActivity(), MarketFragment.OnListFragmentInteractionListener {
 
@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity(), MarketFragment.OnListFragmentInteracti
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.fragment_home)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)
@@ -32,4 +32,5 @@ class MainActivity : AppCompatActivity(), MarketFragment.OnListFragmentInteracti
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
+
 }
