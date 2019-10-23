@@ -14,8 +14,8 @@
     <fragment
         android:id="@+id/navigation_panier"
         android:name="com.epitech.cashmanager.fragments.ShoppingCartFragment"
-        android:label="@string/title_panier"
-        tools:layout="@layout/fragment_panier" />
+        android:label="@string/title_shoppingCart"
+        tools:layout="@layout/fragment_shopping_cart" />
 
     <fragment
         android:id="@+id/navigation_parameter"

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.epitech.cashmanager.R
 
-
 import com.epitech.cashmanager.fragments.MarketFragment.OnListFragmentInteractionListener
 import com.epitech.cashmanager.dummy.DummyContent.DummyItem
 

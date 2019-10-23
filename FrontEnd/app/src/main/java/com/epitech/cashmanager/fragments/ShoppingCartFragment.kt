@@ -22,7 +22,7 @@ class ShoppingCartFragment : Fragment() {
     ): View? {
         shoppingCartViewModel =
             ViewModelProviders.of(this).get(ShoppingCartViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_panier, container, false)
+        val root = inflater.inflate(R.layout.fragment_shopping_cart, container, false)
         val textView: TextView = root.findViewById(R.id.text_panier)
         shoppingCartViewModel.text.observe(this, Observer {
             textView.text = it
