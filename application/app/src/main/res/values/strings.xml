@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">CashManager</string>
+    <string name="title_market">Market</string>
+    <string name="title_shoppingCart">Shopping Cart</string>
+    <string name="title_parameter">Parameter</string>
+    <string name="servertext">Configure server access</string>
+    <string name="servername">Server Name</string>
+    <string name="serverpassword">Server Password</string>
+    <string name="serverconnexion">Connexion</string>
 </resources>

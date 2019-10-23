@@ -1,45 +1,36 @@
 package com.epitech.cashmanager
 
-import android.nfc.NfcAdapter
-import android.nfc.Tag
-import android.nfc.tech.IsoDep
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
-import androidx.annotation.RequiresApi
-import fr.cashmanager.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.epitech.cashmanager.dummy.DummyContent
+import com.epitech.cashmanager.fragments.MarketFragment
 
-@RequiresApi(Build.VERSION_CODES.KITKAT)
-class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
-    private var nfcAdapter: NfcAdapter? = null
-    private var textView: TextView? = null
-    override fun onTagDiscovered(tag: Tag?) {
-        val isoDep = IsoDep.get(tag)
-        isoDep.connect()
-        runOnUiThread { textView?.append("\nCard Response: "
-                + Utils.toHex(isoDep.tag.id)
-        ) }
-        isoDep.close()
+class MainActivity : AppCompatActivity(), MarketFragment.OnListFragmentInteractionListener {
+
+    override fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.server_settings)
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this)
-        textView = findViewById(R.id.textView)
+        setContentView(R.layout.fragment_home)
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
+        val navController = findNavController(R.id.nav_host_fragment)
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_market, R.id.navigation_panier, R.id.navigation_parameter
+            )
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navView.setupWithNavController(navController)
     }
 
-    public override fun onResume() {
-        super.onResume()
-        nfcAdapter?.enableReaderMode(this, this,
-            NfcAdapter.FLAG_READER_NFC_A or
-                    NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
-            null)
-    }
-
-    public override fun onPause() {
-        super.onPause()
-        nfcAdapter?.disableReaderMode(this)
-    }
 }

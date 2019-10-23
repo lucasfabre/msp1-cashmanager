@@ -23,4 +23,6 @@ allprojects {
     }
 }
 
-apply plugin: 'kotlin'
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

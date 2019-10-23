@@ -1,10 +1,13 @@
 package com.epitech.cashmanager.models
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class ServerSettingsViewModel() : ViewModel() {
-    /*val login : String = savedStateHandle["login"] ?:
-    throw IllegalArgumentException("missing login setting")
-    val password : String = savedStateHandle["password"] ?:
-    throw IllegalArgumentException("missing password setting")*/
+class ServerSettingsViewModel : ViewModel() {
+
+    private val _text = MutableLiveData<String>().apply {
+        value = "This is parameter Fragment"
+    }
+    val text: LiveData<String> = _text
 }
