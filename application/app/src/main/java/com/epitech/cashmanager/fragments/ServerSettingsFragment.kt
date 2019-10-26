@@ -11,18 +11,18 @@ import com.epitech.cashmanager.models.ServerSettingsViewModel
 
 class ServerSettingsFragment : Fragment() {
 
-    private lateinit var parameterViewModel: ServerSettingsViewModel
+    private lateinit var settingsViewModel: ServerSettingsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        parameterViewModel =
+        settingsViewModel =
             ViewModelProviders.of(this).get(ServerSettingsViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_parameter, container, false)
-        /*val textView: TextView = root.findViewById(R.id.text_parameter)
-        parameterViewModel.text.observe(this, Observer {
+        val root = inflater.inflate(R.layout.fragment_settings, container, false)
+        /*val textView: TextView = root.findViewById(R.id.text_settings)
+        settingsViewModel.text.observe(this, Observer {
             textView.text = it
         })*/
         return root

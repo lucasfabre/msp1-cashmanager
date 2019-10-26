@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity(), MarketFragment.OnListFragmentInteracti
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_market, R.id.navigation_panier, R.id.navigation_parameter
+                R.id.navigation_market, R.id.navigation_shoppingCart, R.id.navigation_settings
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
