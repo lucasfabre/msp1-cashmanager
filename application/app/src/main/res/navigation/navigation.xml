@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_market" />
 
     <fragment
-        android:id="@+id/navigation_panier"
+        android:id="@+id/navigation_shoppingCart"
         android:name="com.epitech.cashmanager.fragments.ShoppingCartFragment"
         android:label="@string/title_shoppingCart"
         tools:layout="@layout/fragment_shopping_cart" />
 
     <fragment
-        android:id="@+id/navigation_parameter"
+        android:id="@+id/navigation_settings"
         android:name="com.epitech.cashmanager.fragments.ServerSettingsFragment"
-        android:label="@string/title_parameter"
-        tools:layout="@layout/fragment_parameter" />
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>
