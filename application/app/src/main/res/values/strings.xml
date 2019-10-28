@@ -7,4 +7,7 @@
     <string name="servername">Server Name</string>
     <string name="serverpassword">Server Password</string>
     <string name="serverconnexion">Connexion</string>
+    <string name="_0">0</string>
+    <string name="paiement">Paiement</string>
+    <string name="total">Total</string>
 </resources>
