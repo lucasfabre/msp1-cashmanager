@@ -7,11 +7,6 @@
         android:title="@string/title_market" />
 
     <item
-        android:id="@+id/navigation_shoppingCart"
-        android:icon="@drawable/ic_shopping_cart_black_24dp"
-        android:title="@string/title_shoppingCart" />
-
-    <item
         android:id="@+id/navigation_settings"
         android:icon="@drawable/ic_settings_black_24dp"
         android:title="@string/title_settings" />
