@@ -40,13 +40,14 @@
             android:textAlignment="center" />
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center"
             android:layout_marginBottom="25dp"
             >
 
-            <com.google.android.material.textfield.TextInputEditText
+            <EditText
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/servername" />
@@ -59,14 +60,14 @@
             android:gravity="center_vertical|center"
             android:layout_marginBottom="50dp">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/serverpassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/connexion"
+            android:id="@+id/btnConnexion"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:text="@string/serverconnexion" />

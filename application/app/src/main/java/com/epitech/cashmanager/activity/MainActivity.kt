@@ -12,6 +12,10 @@ import com.epitech.cashmanager.R
 import com.epitech.cashmanager.services.ShoppingCartService
 import io.paperdb.Paper
 import kotlinx.android.synthetic.main.fragment_home.*
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.PrintWriter
+import java.net.Socket
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,5 +37,9 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ShoppingCartActivity::class.java)
             startActivity(intent)
         }
+
+        var clientSocket = Socket("127.0.0.1", 6666)
+        val out = PrintWriter(clientSocket.getOutputStream(), true)
+        val `in` = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
     }
 }

@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 
 class ServerSettingsViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is settings Fragment"
+    private val _hostname = MutableLiveData<String>().apply {
+        value = "192.168.0.23"
     }
-    val text: LiveData<String> = _text
+    val hostname: LiveData<String> = _hostname
 }
