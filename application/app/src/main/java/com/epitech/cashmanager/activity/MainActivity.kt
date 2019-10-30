@@ -9,7 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.epitech.cashmanager.R
-import com.epitech.cashmanager.services.ShoppingCart
+import com.epitech.cashmanager.services.ShoppingCartService
 import io.paperdb.Paper
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        cart_size.text = ShoppingCart.getShoppingCartSize().toString()
+        cart_size.text = ShoppingCartService.getShoppingCartSize().toString()
         showCart.setOnClickListener {
             val intent = Intent(this, ShoppingCartActivity::class.java)
             startActivity(intent)

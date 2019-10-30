@@ -6,8 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.epitech.cashmanager.R
 import com.epitech.cashmanager.models.adapter.ShoppingCartAdapter
-import com.epitech.cashmanager.services.ShoppingCart
-import kotlinx.android.synthetic.main.activity_shopping_cart.*
+import com.epitech.cashmanager.services.ShoppingCartService
+import kotlinx.android.synthetic.main.fragment_shopping_cart.*
 
 class ShoppingCartActivity : AppCompatActivity() {
 
@@ -15,15 +15,15 @@ class ShoppingCartActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_shopping_cart)
-        title = "Panier"
-        adapter = ShoppingCartAdapter(this, ShoppingCart.getCart())
+        setContentView(R.layout.fragment_shopping_cart)
+        title = "Shopping Cart"
+        adapter = ShoppingCartAdapter(this, ShoppingCartService.getCart())
         adapter.notifyDataSetChanged()
 
         shopping_cart_recyclerView.adapter = adapter
         shopping_cart_recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val totalPrice = ShoppingCart.getCart()
+        val totalPrice = ShoppingCartService.getCart()
             .fold(0.toDouble()) { acc, cartItem -> acc + cartItem.quantity.times(cartItem.product.price!!.toDouble()) }
         total_price.text = "${totalPrice}€"
     }

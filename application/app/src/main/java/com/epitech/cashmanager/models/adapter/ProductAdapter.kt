@@ -9,19 +9,19 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.epitech.cashmanager.activity.MainActivity
 import com.epitech.cashmanager.R
-import com.epitech.cashmanager.services.ShoppingCart
+import com.epitech.cashmanager.services.ShoppingCartService
 import com.epitech.cashmanager.beans.CartItem
 import com.epitech.cashmanager.beans.Product
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.product_row_item.view.*
+import kotlinx.android.synthetic.main.adapter_product_row_item.view.*
 
 class ProductAdapter(var context: Context, var products: List<Product> = arrayListOf()):
     RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.product_row_item, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.adapter_product_row_item, parent, false)
         return ViewHolder(view)
 
     }
@@ -47,24 +47,24 @@ class ProductAdapter(var context: Context, var products: List<Product> = arrayLi
 
                     val item = CartItem(product)
 
-                    ShoppingCart.addItem(item)
+                    ShoppingCartService.addItem(item)
                     //notify users
                     Snackbar.make(
                         (itemView.context as MainActivity).coordinator,
-                        "${product.name} ajouté au panier",
+                        "${product.name} added to cart",
                         Snackbar.LENGTH_LONG
                     ).show()
-                    it.onNext(ShoppingCart.getCart())
+                    it.onNext(ShoppingCartService.getCart())
                 }
                 itemView.removeItem.setOnClickListener { view ->
                     val item = CartItem(product)
-                    ShoppingCart.removeItem(item, itemView.context)
+                    ShoppingCartService.removeItem(item, itemView.context)
                     Snackbar.make(
                         (itemView.context as MainActivity).coordinator,
-                        "${product.name} enlever du panier",
+                        "${product.name} deleted to cart",
                         Snackbar.LENGTH_LONG
                     ).show()
-                    it.onNext(ShoppingCart.getCart())
+                    it.onNext(ShoppingCartService.getCart())
                 }
             }).subscribe { cart ->
                 var quantity = 0
@@ -72,7 +72,7 @@ class ProductAdapter(var context: Context, var products: List<Product> = arrayLi
                     quantity += cartItem.quantity
                 }
                 (itemView.context as MainActivity).cart_size.text = quantity.toString()
-                Toast.makeText(itemView.context, "taille du panier $quantity", Toast.LENGTH_SHORT).show()
+                Toast.makeText(itemView.context, "size of cart $quantity", Toast.LENGTH_SHORT).show()
             }
         }
     }

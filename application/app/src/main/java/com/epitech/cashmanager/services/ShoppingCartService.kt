@@ -3,11 +3,13 @@ package com.epitech.cashmanager.services
 import android.content.Context
 import android.widget.Toast
 import com.epitech.cashmanager.beans.CartItem
-import io.paperdb.Paper
+import com.epitech.cashmanager.repositories.ShoppingCartRepository
 
-class ShoppingCart {
+class ShoppingCartService {
 
     companion object {
+
+        private val cartRepository = ShoppingCartRepository()
 
         fun addItem(cartItem: CartItem) {
             val cart = getCart()
@@ -49,11 +51,11 @@ class ShoppingCart {
         }
 
         fun saveCart(cart: MutableList<CartItem>) {
-            Paper.book().write("cart", cart)
+            cartRepository.saveCart(cart)
         }
 
         fun getCart(): MutableList<CartItem> {
-            return Paper.book().read("cart", mutableListOf())
+            return cartRepository.getCart()
         }
 
         fun getShoppingCartSize(): Int {

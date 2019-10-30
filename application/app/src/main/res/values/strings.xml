@@ -8,6 +8,6 @@
     <string name="serverpassword">Server Password</string>
     <string name="serverconnexion">Connexion</string>
     <string name="_0">0</string>
-    <string name="paiement">Paiement</string>
+    <string name="payment">Payment</string>
     <string name="total">Total</string>
 </resources>
