@@ -10,4 +10,9 @@
     <string name="_0">0</string>
     <string name="payment">Payment</string>
     <string name="total">Total</string>
+    <string name="nfc">NFC</string>
+    <string name="qrcode">QrCode</string>
+    <string name="paiement_nfc">Paiement NFC</string>
+    <string name="paiement_qrcode">Paiement QrCode</string>
+    <string name="CB">Placez votre carte bancaire sous le périphérique</string>
 </resources>
