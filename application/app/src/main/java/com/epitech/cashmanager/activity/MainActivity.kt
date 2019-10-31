@@ -53,9 +53,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        /*var clientSocket = Socket("127.0.0.1", 6666)
+        /* var clientSocket = Socket("127.0.0.1", 6666)
         val out = PrintWriter(clientSocket.getOutputStream(), true)
-        val `in` = BufferedReader(InputStreamReader(clientSocket.getInputStream()))*/
+        val `in` = BufferedReader(InputStreamReader(clientSocket.getInputStream())) */
     }
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>,
