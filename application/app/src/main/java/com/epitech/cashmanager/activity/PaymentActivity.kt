@@ -10,14 +10,14 @@ import com.epitech.cashmanager.models.adapter.ShoppingCartAdapter
 import com.epitech.cashmanager.services.ShoppingCartService
 import kotlinx.android.synthetic.main.activity_paiement.*
 
-class PaiementActivity : AppCompatActivity() {
+class PaymentActivity : AppCompatActivity() {
     lateinit var adapter: ShoppingCartAdapter
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_paiement)
-        title = "Paiement"
+        title = "Payment"
         adapter = ShoppingCartAdapter(this, ShoppingCartService.getCart())
         adapter.notifyDataSetChanged()
         val totalPrice = ShoppingCartService.getCart()

@@ -9,7 +9,6 @@ import com.epitech.cashmanager.R
 import com.epitech.cashmanager.models.adapter.ShoppingCartAdapter
 import com.epitech.cashmanager.services.ShoppingCartService
 import kotlinx.android.synthetic.main.activity_shopping_cart.*
-import kotlinx.android.synthetic.main.fragment_shopping_cart.*
 
 class ShoppingCartActivity : AppCompatActivity() {
 
@@ -29,7 +28,7 @@ class ShoppingCartActivity : AppCompatActivity() {
             .fold(0.toDouble()) { acc, cartItem -> acc + cartItem.quantity.times(cartItem.product.price!!.toDouble()) }
         total_price.text = "${totalPrice}€"
         paiementButton.setOnClickListener{
-            val intent = Intent(this, PaiementActivity::class.java)
+            val intent = Intent(this, PaymentActivity::class.java)
             startActivity(intent)
         }
     }

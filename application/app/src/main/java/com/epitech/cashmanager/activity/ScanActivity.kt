@@ -1,21 +1,28 @@
 package com.epitech.cashmanager.activity
 
+import android.Manifest
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.epitech.cashmanager.tools.ManagePermissions
 import com.google.zxing.Result
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 
 class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
     private var mScannerView: ZXingScannerView? = null
+    private val PermissionsRequestCode = 123
+    private lateinit var managePermissions: ManagePermissions
 
     public override fun onCreate(state: Bundle?) {
         super.onCreate(state)
-        title = "Paiement QrCode"
+        title = "Payment by QrCode"
         mScannerView = ZXingScannerView(this)
         setContentView(mScannerView)
+
+
     }
 
     public override fun onResume() {
@@ -49,4 +56,21 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         startActivity(intents)
         //mScannerView?.resumeCameraPreview(this)
     }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            PermissionsRequestCode -> {
+                val isPermissionsGranted = managePermissions
+                    .processPermissionsResult(requestCode, permissions, grantResults)
+                if (isPermissionsGranted) {
+                } else {
+                }
+                return
+            }
+        }
+    }
+
 }

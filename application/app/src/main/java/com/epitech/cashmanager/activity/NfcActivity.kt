@@ -26,7 +26,7 @@ class NfcActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        title = "Paiement NFC"
+        title = "Payment NFC"
         setContentView(R.layout.activity_nfcpay)
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
     }

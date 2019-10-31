@@ -33,8 +33,8 @@ class MarketFragment : Fragment() {
         getProducts()
     }
     private fun getProducts() {
-        val product = Product("une description banal", 1, "Asus Rog", "1700", R.drawable.laptop)
-        val product2 = Product("une description banal", 2, "Vin Rouge", "70", R.drawable.wine_bottle)
+        val product = Product("basic description", 1, "Asus Rog", "1700", R.drawable.laptop)
+        val product2 = Product("basic description", 2, "Vin Rouge", "70", R.drawable.wine_bottle)
         products.add(product)
         products.add(product2)
         productAdapter = context?.let { ProductAdapter(it, products) }!!
