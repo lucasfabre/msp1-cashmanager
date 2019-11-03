@@ -20,6 +20,16 @@ import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.Socket
 
+
+/**
+ * MainActivity
+ *
+ * This class serve to define the start point of an Android Application
+ *
+ * @property PermissionsRequestCode the permissionsRequestCode define the number of the permission
+ * @property managePermissions the managePermissions permit to manage all android permissions access
+ */
+
 class MainActivity : AppCompatActivity() {
 
     private val PermissionsRequestCode = 123
