@@ -10,7 +10,16 @@ import com.epitech.cashmanager.models.adapter.ShoppingCartAdapter
 import com.epitech.cashmanager.services.ShoppingCartService
 import kotlinx.android.synthetic.main.activity_paiement.*
 
+/**
+ * PaymentActivity
+ *
+ * This class permit to manage different payment methods
+ *
+ * @property ShoppingCartAdapter the adapter permit to manage date of cart (quantity, price, etc..)
+ */
+
 class PaymentActivity : AppCompatActivity() {
+
     lateinit var adapter: ShoppingCartAdapter
 
     @SuppressLint("SetTextI18n")
@@ -26,6 +35,13 @@ class PaymentActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * goToNFC
+     *
+     * This method called an intent for will launch NFC reader
+     *
+     * @param View view represent currentView
+     */
 
     fun goToNFC(view: View) {
         val intent = Intent(this, NfcActivity::class.java)
@@ -33,9 +49,18 @@ class PaymentActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    /**
+     * goToQr
+     *
+     * This method called an intent for will launch QR Code
+     *
+     * @param View view represent currentView
+     */
+
     fun goToQr(view: View) {
         val intent = Intent(this, ScanActivity::class.java)
         //finish() //close current activity
         startActivity(intent)
     }
+
 }

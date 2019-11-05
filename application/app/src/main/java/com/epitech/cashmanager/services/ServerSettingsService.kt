@@ -1,7 +1,13 @@
 package com.epitech.cashmanager.services
 
-interface ServerSettingsService {
+/**
+ * Server settings service
+ *
+ * This class is use for define JSON-RCP communication with a server
+ */
+
+class ServerSettingsService {
     /**
-     * Future RCP service for ServerSettings
+     * Future JSON-RCP implementation
      */
 }

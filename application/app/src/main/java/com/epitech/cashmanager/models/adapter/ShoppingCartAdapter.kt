@@ -10,8 +10,17 @@ import com.epitech.cashmanager.R
 import com.epitech.cashmanager.beans.CartItem
 import kotlinx.android.synthetic.main.adapter_cart_list_item.view.*
 
+/**
+ * Shopping cart adapter
+ *
+ * This class is an instance of Socket
+ *
+ * @return RecyclerView.Adapter<ShoppingCartAdapter.ViewHolder>
+ */
+
 class ShoppingCartAdapter(var context: Context, var cartItems: List<CartItem>) :
     RecyclerView.Adapter<ShoppingCartAdapter.ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
         val layout = LayoutInflater.from(context).inflate(R.layout.adapter_cart_list_item, parent, false)
         return ViewHolder(layout)
@@ -22,6 +31,14 @@ class ShoppingCartAdapter(var context: Context, var cartItems: List<CartItem>) :
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.bindItem(cartItems[position])
     }
+
+    /**
+     * ViewHolder
+     *
+     * This class define a part of global view
+     *
+     * @param View define the view
+     */
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         @SuppressLint("SetTextI18n")
@@ -35,6 +52,5 @@ class ShoppingCartAdapter(var context: Context, var cartItems: List<CartItem>) :
             }
         }
     }
-
 
 }

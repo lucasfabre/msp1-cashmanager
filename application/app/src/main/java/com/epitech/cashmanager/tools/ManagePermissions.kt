@@ -6,10 +6,24 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
+/**
+ * Socket Instance
+ *
+ * This class is an instance of Socket
+ *
+ * @property Activity activity represent the activity for which manage permission
+ * @property List<String> list represent the list of permissions
+ * @property Int code represent the code of permission
+*/
 
 class ManagePermissions(val activity: Activity, val list: List<String>, val code: Int) {
 
-    // Check permissions at runtime
+    /**
+     * checkPermissions
+     *
+     * This method check permissions at runtime
+     */
+
     fun checkPermissions() {
         if (isPermissionsGranted() != PackageManager.PERMISSION_GRANTED) {
             showAlert()
@@ -18,7 +32,13 @@ class ManagePermissions(val activity: Activity, val list: List<String>, val code
         }
     }
 
-    // Check permissions status
+    /**
+     * isPermissionsGranted
+     *
+     * This method check permissions status
+     * @return Int
+     */
+
     private fun isPermissionsGranted(): Int {
         var counter = 0
         for (permission in list) {
@@ -27,7 +47,13 @@ class ManagePermissions(val activity: Activity, val list: List<String>, val code
         return counter
     }
 
-    // Find the first denied permission
+    /**
+     * deniedPermission
+     *
+     * This method find the first denied permission
+     * @return String
+     */
+
     private fun deniedPermission(): String {
         for (permission in list) {
             if (ContextCompat.checkSelfPermission(activity, permission)
@@ -37,7 +63,12 @@ class ManagePermissions(val activity: Activity, val list: List<String>, val code
         return ""
     }
 
-    // Show alert dialog to request permissions
+    /**
+     * showAlert
+     *
+     * This method show alert dialog to request permissions
+     */
+
     private fun showAlert() {
         val builder = AlertDialog.Builder(activity)
         builder.setTitle("Need permission(s)")
@@ -48,8 +79,12 @@ class ManagePermissions(val activity: Activity, val list: List<String>, val code
         dialog.show()
     }
 
+    /**
+     * requestPermissions
+     *
+     * This method request the permissions at run time
+     */
 
-    // Request the permissions at run time
     private fun requestPermissions() {
         val permission = deniedPermission()
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
@@ -60,8 +95,13 @@ class ManagePermissions(val activity: Activity, val list: List<String>, val code
         }
     }
 
+    /**
+     * processPermissionsResult
+     *
+     * This method return process permissions result with an Boolean
+     * @return Boolean
+     */
 
-    // Process permissions result
     fun processPermissionsResult(
         requestCode: Int, permissions: Array<String>,
         grantResults: IntArray
@@ -75,4 +115,5 @@ class ManagePermissions(val activity: Activity, val list: List<String>, val code
         if (result == PackageManager.PERMISSION_GRANTED) return true
         return false
     }
+
 }

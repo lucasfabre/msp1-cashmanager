@@ -10,6 +10,14 @@ import com.epitech.cashmanager.models.adapter.ShoppingCartAdapter
 import com.epitech.cashmanager.services.ShoppingCartService
 import kotlinx.android.synthetic.main.activity_shopping_cart.*
 
+/**
+ * ShoppingCartActivity
+ *
+ * This class permit to manage different payment methods
+ *
+ * @property ShoppingCartAdapter the adapter permit to manage date of cart (quantity, price, etc..)
+ */
+
 class ShoppingCartActivity : AppCompatActivity() {
 
     lateinit var adapter: ShoppingCartAdapter
@@ -41,4 +49,5 @@ class ShoppingCartActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
 }

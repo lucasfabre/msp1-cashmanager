@@ -9,7 +9,16 @@ import com.epitech.cashmanager.R
 import com.epitech.cashmanager.tools.Utils
 import kotlinx.android.synthetic.main.activity_nfcpay.*
 
+/**
+ * NfcActivity
+ *
+ * This class permit to manage NFC view
+ *
+ * @property NfcAdapter the nfcAdapter represent the default NFC hardware access
+ */
+
 class NfcActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
+
     private var nfcAdapter: NfcAdapter? = null
 
     override fun onTagDiscovered(tag: Tag?) {
@@ -45,4 +54,5 @@ class NfcActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         super.onPause()
         nfcAdapter?.disableReaderMode(this)
     }
+
 }

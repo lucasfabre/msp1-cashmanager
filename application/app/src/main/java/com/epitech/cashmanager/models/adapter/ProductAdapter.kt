@@ -18,8 +18,17 @@ import io.reactivex.ObservableOnSubscribe
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.adapter_product_row_item.view.*
 
+/**
+ * Product adapter
+ *
+ * This class permit of manage product
+ *
+ * @return return an RecyclerView.Adapter<ProductAdapter.ViewHolder>
+ */
+
 class ProductAdapter(var context: Context, var products: List<Product> = arrayListOf()):
     RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.adapter_product_row_item, parent, false)
         return ViewHolder(view)
@@ -32,6 +41,15 @@ class ProductAdapter(var context: Context, var products: List<Product> = arrayLi
         viewHolder.bindProduct(products[position])
         (context as MainActivity).coordinator
     }
+
+    /**
+     * ViewHolder
+     *
+     * This class define a part of global view
+     *
+     * @param View define the view
+     */
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         @SuppressLint("CheckResult", "SetTextI18n")
         fun bindProduct(product: Product) {
@@ -76,4 +94,5 @@ class ProductAdapter(var context: Context, var products: List<Product> = arrayLi
             }
         }
     }
+
 }
