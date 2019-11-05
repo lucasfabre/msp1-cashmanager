@@ -1,7 +1,13 @@
 package com.epitech.cashmanager.repositories
 
+/**
+ * Server settings repository
+ *
+ * This class represent server settings persistance
+ */
+
 class ServerSettingsRepository {
     /**
-     * Future Call services and data persistance
+     * Future methods for data persistance
      */
 }

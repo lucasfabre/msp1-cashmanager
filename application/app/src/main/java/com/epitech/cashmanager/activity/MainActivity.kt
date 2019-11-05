@@ -20,7 +20,6 @@ import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.Socket
 
-
 /**
  * MainActivity
  *
@@ -67,6 +66,17 @@ class MainActivity : AppCompatActivity() {
         val out = PrintWriter(clientSocket.getOutputStream(), true)
         val `in` = BufferedReader(InputStreamReader(clientSocket.getInputStream())) */
     }
+
+    /**
+     * onRequestPermissionsResult
+     *
+     * This method is called for init managePermissions object
+     *
+     * @param Int requestCode
+     * @param Array<String> tab of permissions
+     * @param IntArray tab of int grantResults
+     */
+
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>,
         grantResults: IntArray
@@ -82,4 +92,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 }

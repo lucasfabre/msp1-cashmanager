@@ -1,9 +1,7 @@
 package com.epitech.cashmanager.activity
 
-import android.Manifest
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +10,7 @@ import com.google.zxing.Result
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 
 class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
+
     private var mScannerView: ZXingScannerView? = null
     private val PermissionsRequestCode = 123
     private lateinit var managePermissions: ManagePermissions
@@ -35,6 +34,14 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         super.onPause()
         mScannerView?.stopCamera()
     }
+
+    /**
+     * handleResult
+     *
+     * This method is use for decode QR Code Image and launch intent
+     *
+     * @param Result rawResult represent the result of decoding QR Code Image
+     */
 
     override fun handleResult(rawResult: Result) {
         /*val builder = AlertDialog.Builder(this)

@@ -12,6 +12,15 @@ import androidx.lifecycle.ViewModelProviders
 import com.epitech.cashmanager.R
 import com.epitech.cashmanager.models.ServerSettingsViewModel
 
+/**
+ * Server settings fragment
+ *
+ * This class is an instance of Socket
+ *
+ * @property ServerSettingsViewModel the settingsViewModel define a data model for th settings view
+ * @return fragment
+ */
+
 class ServerSettingsFragment : Fragment()  {
 
     private lateinit var settingsViewModel: ServerSettingsViewModel

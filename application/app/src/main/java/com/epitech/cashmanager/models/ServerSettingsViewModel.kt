@@ -10,4 +10,5 @@ class ServerSettingsViewModel : ViewModel() {
         value = "192.168.0.23"
     }
     val hostname: LiveData<String> = _hostname
+
 }
