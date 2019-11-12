@@ -11,11 +11,20 @@ import com.epitech.cashmanager.beans.Product
 import com.epitech.cashmanager.models.adapter.ProductAdapter
 import kotlinx.android.synthetic.main.fragment_market.*
 
+/**
+ * Market fragment
+ *
+ * This class represent the view of market
+ *
+ * @property ProductAdapter the productAdapter permit to manage product (add, remove, quantity)
+ * @property ArrayList<Product> the products define an string array of products
+ */
+
 class MarketFragment : Fragment() {
 
     private lateinit var productAdapter: ProductAdapter
-
     private var products = ArrayList<Product>()
+
     companion object {
         fun newInstance() = MarketFragment()
     }
@@ -32,12 +41,14 @@ class MarketFragment : Fragment() {
         products_recyclerview.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         getProducts()
     }
+
     private fun getProducts() {
-        val product = Product("une description banal", 1, "Asus Rog", "1700", R.drawable.laptop)
-        val product2 = Product("une description banal", 2, "Vin Rouge", "70", R.drawable.wine_bottle)
+        val product = Product("basic description", 1, "Asus Rog", "1700", R.drawable.laptop)
+        val product2 = Product("basic description", 2, "Vin Rouge", "70", R.drawable.wine_bottle)
         products.add(product)
         products.add(product2)
         productAdapter = context?.let { ProductAdapter(it, products) }!!
         products_recyclerview.adapter = productAdapter
     }
+
 }

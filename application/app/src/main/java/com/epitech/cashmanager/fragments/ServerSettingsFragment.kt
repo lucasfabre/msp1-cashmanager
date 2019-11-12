@@ -14,6 +14,15 @@ import com.epitech.cashmanager.models.ServerSettingsViewModel
 import com.epitech.cashmanager.network.SocketInstance
 import org.json.JSONObject
 
+/**
+ * Server settings fragment
+ *
+ * This class is an instance of Socket
+ *
+ * @property ServerSettingsViewModel the settingsViewModel define a data model for th settings view
+ * @return fragment
+ */
+
 class ServerSettingsFragment : Fragment()  {
 
     private lateinit var settingsViewModel: ServerSettingsViewModel

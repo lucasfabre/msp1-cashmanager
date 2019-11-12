@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'org.jetbrains.dokka-android'
 
 android {
     compileOptions {
@@ -29,6 +28,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    dokka {
+        outputFormat = 'markdown'
+        outputDirectory = "$buildDir/documentation"
+    }
 }
 
 dependencies {
@@ -54,6 +58,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
+    implementation 'me.dm7.barcodescanner:zxing:1.9.13'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

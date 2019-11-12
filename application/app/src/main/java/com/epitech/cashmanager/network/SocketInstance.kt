@@ -10,6 +10,13 @@ import java.io.*
 
 /**
  * Socket Instance
+ *
+ * This class is an instance of Socket
+ *
+ * @property ServerSocket the serverSocket define the server
+ * @property Socket the clientSocket define the client
+ * @property PrintWriter out define output
+ * @property BufferedReader 'in' define input
  */
 
 class SocketInstance {
@@ -19,6 +26,14 @@ class SocketInstance {
 
     private val config: Config = Config()
     private val mapper = ObjectMapper().registerModule(KotlinModule())
+
+    /**
+     * start
+     *
+     * This method is use for start a Socket
+     *
+     * @param Int port represent the port of the app
+     */
 
     fun start() {
         clientSocket = Socket(config.ip, config.port)
@@ -56,6 +71,12 @@ class SocketInstance {
         val deserializedJSON = mapper.readValue<JSONObject>(json)
         return deserializedJSON
     }
+
+    /**
+     * stop
+     *
+     * This method is use for stop a Socket
+     */
 
     fun stop() {
         `in`!!.close()
