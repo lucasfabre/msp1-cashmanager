@@ -11,10 +11,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.epitech.cashmanager.R
 import com.epitech.cashmanager.models.ServerSettingsViewModel
+import com.epitech.cashmanager.network.SocketInstance
+import org.json.JSONObject
 
 class ServerSettingsFragment : Fragment()  {
 
     private lateinit var settingsViewModel: ServerSettingsViewModel
+    private var socket: SocketInstance = SocketInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +36,12 @@ class ServerSettingsFragment : Fragment()  {
         btnConnexion.text = "Connexion"
         btnConnexion.setOnClickListener {
             btnConnexion.isEnabled = false
+            var params: JSONObject = JSONObject()
+            params.put("login", "jean")
+            params.put("password", "dupond")
+            socket.start()
+            socket.sendRCPFormatData("login", params, 1)
+            socket.stop()
         }
 
         return root

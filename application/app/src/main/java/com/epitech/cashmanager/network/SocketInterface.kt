@@ -6,7 +6,7 @@ import java.io.IOException
  * Server Interface
  */
 
-interface ServerInterface {
+interface SocketInterface {
 
     /**
      * Is the server launched

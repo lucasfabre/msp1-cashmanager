@@ -37,9 +37,5 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ShoppingCartActivity::class.java)
             startActivity(intent)
         }
-
-        var clientSocket = Socket("127.0.0.1", 6666)
-        val out = PrintWriter(clientSocket.getOutputStream(), true)
-        val `in` = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
     }
 }
