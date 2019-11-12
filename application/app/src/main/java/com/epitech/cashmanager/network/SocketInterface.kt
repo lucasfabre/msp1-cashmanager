@@ -10,7 +10,7 @@ import java.io.IOException
  * @property Boolean isRunning allow to know if the server is launched
  */
 
-interface ServerInterface {
+interface SocketInterface {
 
     /**
      * Is the server launched
