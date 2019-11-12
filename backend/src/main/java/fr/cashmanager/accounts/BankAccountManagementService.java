@@ -13,7 +13,7 @@ public abstract class BankAccountManagementService {
      * @param accountId the account id
      * @return the account with the same Id
      */
-    protected abstract Account getAccountForId(String accountId) throws NoSuchElementException;
+    public abstract Account getAccountForId(String accountId) throws NoSuchElementException;
 
     /**
      * Save the account and his state

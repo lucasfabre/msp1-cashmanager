@@ -34,6 +34,37 @@ public class JsonRPCClientTests extends TestCase {
     public ClientHandlerFactory clientHandlerFactory;
     public static IServer server;
 
+    class SubstractCommand implements IJsonRpcCommand {
+        private List<Integer> params = null;
+        @Override
+        public void parseParams(JsonNode params) throws Exception {
+            JavaType jt = mapper.getTypeFactory().constructType(new TypeReference<List<Integer>>(){});
+            this.params = mapper.readValue(mapper.treeAsTokens(params), jt);
+        }
+
+        @Override
+        public String getMethodName() {
+            return "subtract";
+        }
+
+        @Override
+        public JsonNode execute() throws Exception {
+            Integer result = params.stream().reduce((a, b) -> a - b).get();
+            ObjectNode commandResult = mapper.createObjectNode();
+            commandResult.put("value", result);
+            return commandResult;
+        }
+
+        @Override
+        public IJsonRpcCommand newInstance() {
+            try {
+                return new SubstractCommand();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     @Override
     protected void setUp() throws Exception {
         ServicesContainer container = new ServicesContainer();
@@ -54,27 +85,7 @@ public class JsonRPCClientTests extends TestCase {
         container.register(IConfig.class, this.config);
         // JsonRpcCommandManager
         JsonRpcCommandManager jsonRpcCommandManager = new JsonRpcCommandManager();
-        jsonRpcCommandManager.registerCommand(new IJsonRpcCommand(){
-            private List<Integer> params = null;
-            @Override
-            public void parseParams(JsonNode params) throws Exception {
-                JavaType jt = mapper.getTypeFactory().constructType(new TypeReference<List<Integer>>(){});
-                this.params = mapper.readValue(mapper.treeAsTokens(params), jt);
-            }
-
-            @Override
-            public String getMethodName() {
-                return "subtract";
-            }
-
-            @Override
-            public JsonNode execute() throws Exception {
-                Integer result = params.stream().reduce((a, b) -> a - b).get();
-                ObjectNode commandResult = mapper.createObjectNode();
-                commandResult.put("value", result);
-                return commandResult;
-            }
-        });
+        jsonRpcCommandManager.registerCommand(new SubstractCommand());
         container.register(JsonRpcCommandManager.class, jsonRpcCommandManager);
         // ClientHandlerFactory
         this.clientHandlerFactory = new JsonRpcClientHandlerFactory(container);

@@ -26,4 +26,9 @@ public interface IJsonRpcCommand {
      * @throws Exception an exception in case of an error
      */
     public JsonNode execute() throws Exception;
+
+    /**
+     * factory method
+     */
+    public IJsonRpcCommand newInstance();
 }

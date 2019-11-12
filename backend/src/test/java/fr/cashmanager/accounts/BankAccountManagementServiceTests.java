@@ -26,7 +26,7 @@ public class BankAccountManagementServiceTests extends TestCase {
             }
         
             @Override
-            protected Account getAccountForId(String accountId) throws NoSuchElementException {
+            public Account getAccountForId(String accountId) throws NoSuchElementException {
                 return testStorage.get(accountId);
             }
         };

@@ -2,6 +2,7 @@ package fr.cashmanager;
 
 import fr.cashmanager.accounts.BankAccountManagementService;
 import fr.cashmanager.accounts.InMemoryBankAccountManagementService;
+import fr.cashmanager.command.CommandDescribeAccount;
 import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.LocalFileConfig;
 import fr.cashmanager.impl.ioc.ServicesContainer;
@@ -23,10 +24,11 @@ public class CashManager {
      * Main method for the cashManager
      */
     public static void main(String[] args) {
-        ServicesContainer servicesContainer = initContainer();
+        ServicesContainer services = initContainer();
         try {
-            initServices(servicesContainer);
-            IServer server = servicesContainer.get(IServer.class);
+            initServices(services);
+            initCommands(services);
+            IServer server = services.get(IServer.class);
             server.listen();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -41,6 +43,16 @@ public class CashManager {
     public static void initServices(ServicesContainer container) throws Exception {
         IConfig config = container.get(IConfig.class);
         config.configure();
+    }
+
+    /**
+     * init commands
+     * @param container the service container
+     * @throws Exception
+     */
+    public static void initCommands(ServicesContainer services) throws Exception {
+        JsonRpcCommandManager commandManager = services.get(JsonRpcCommandManager.class);
+        commandManager.registerCommand(new CommandDescribeAccount(services));
     }
 
     /**

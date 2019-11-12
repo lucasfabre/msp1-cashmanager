@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.cashmanager.accounts.Account;
 import fr.cashmanager.accounts.BankAccountManagementService;
+import fr.cashmanager.impl.helpers.JsonMapperFactory;
 import fr.cashmanager.impl.ioc.ServicesContainer;
 import fr.cashmanager.user.User;
 import fr.cashmanager.user.UserManagementService;
@@ -19,9 +20,6 @@ public class LocalFileConfig implements IConfig {
 
     // The property is set by spring
     private String filePathAString = null;
-    
-    // We use a static unique object mapper because the object mapper is slow to instanciate
-    private static ObjectMapper mapper = new ObjectMapper();
 
     // Used services
     private BankAccountManagementService    bankAccountManagementService;
@@ -50,7 +48,7 @@ public class LocalFileConfig implements IConfig {
             this.filePathAString = localfilePropertyValue;
         }
         this.bankAccountManagementService = container.get(BankAccountManagementService.class);
-        this.userManagementService = container.get(UserManagementService.class);;
+        this.userManagementService = container.get(UserManagementService.class);
     }
 
     /**
@@ -59,6 +57,7 @@ public class LocalFileConfig implements IConfig {
      */
     @Override
     public void configure() throws Exception {
+        ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
         if (this.filePathAString == null) {
             throw new Exception("No config file provided, please set the cashmanager.config.localfile property");
         }

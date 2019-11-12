@@ -19,7 +19,7 @@ public class InMemoryBankAccountManagementService extends BankAccountManagementS
      * @param accountId the account id
      * @return the account with the same Id
      */
-    protected Account getAccountForId(String accountId) throws NoSuchElementException {
+    public Account getAccountForId(String accountId) throws NoSuchElementException {
         if (false == this.accountByAccountId.containsKey(accountId)) {
             throw new NoSuchElementException("No account match the account id: " + accountId);
         }

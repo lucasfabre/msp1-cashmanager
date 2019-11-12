@@ -75,7 +75,7 @@ public class JsonRpcClientHandler extends ClientHandler {
         if (method == null) {
             throw new Exception("no method for command [" + mapper.writeValueAsString(tree) + "]");
         }
-        IJsonRpcCommand command = commandManager.getCommandForMethod(method);
+        IJsonRpcCommand command = commandManager.getCommandForMethod(method).newInstance();
         if (command == null) {
             throw new Exception("no command for method [" + method + "]");
         }
