@@ -1,4 +1,4 @@
-package fr.cashmanager
+package com.epitech.cashmanager
 
 import org.junit.Test
 

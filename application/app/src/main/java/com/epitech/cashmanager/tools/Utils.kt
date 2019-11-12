@@ -1,4 +1,4 @@
-package fr.cashmanager
+package com.epitech.cashmanager.tools
 
 class Utils {
     companion object {
