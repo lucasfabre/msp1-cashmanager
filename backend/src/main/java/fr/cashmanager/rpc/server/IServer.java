@@ -1,4 +1,4 @@
-package fr.cashmanager.rpc;
+package fr.cashmanager.rpc.server;
 
 import java.io.IOException;
 

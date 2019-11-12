@@ -1,8 +1,9 @@
-package fr.cashmanager.rpc;
+package fr.cashmanager.rpc.clienthandler;
 
 import java.net.Socket;
 
 import fr.cashmanager.impl.ioc.ServicesContainer;
+import fr.cashmanager.rpc.commands.JsonRpcCommandManager;
 
 /**
  * JsonRpcClientHandlerFactory

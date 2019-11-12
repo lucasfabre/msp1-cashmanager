@@ -8,15 +8,15 @@ import fr.cashmanager.impl.ioc.ServicesContainer;
  */
 public class PaymentProcessingService {
 
-    private BankAccountManagementService bankAccountManagementService;
+    private ServicesContainer services;
 
     /**
      * default constructor
      * require: BankAccountManagementService
      * @param container the ioc container
      */
-    public PaymentProcessingService(ServicesContainer container) {
-        this.bankAccountManagementService = container.get(BankAccountManagementService.class);
+    public PaymentProcessingService(ServicesContainer services) {
+        this.services = services;
     }
 
     /**
@@ -24,6 +24,7 @@ public class PaymentProcessingService {
      * @param payment the transaction to process
      */
     public void processTransaction(IPayment payment) throws Exception {
+        BankAccountManagementService bankAccountManagementService = services.get(BankAccountManagementService.class);
         final Double amount = payment.getAmount();
         bankAccountManagementService.debitAccount(payment.getDebtor(), amount);
         try {

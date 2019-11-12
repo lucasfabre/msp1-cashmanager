@@ -1,4 +1,4 @@
-package fr.cashmanager.rpc;
+package fr.cashmanager.rpc.commands;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

@@ -1,4 +1,4 @@
-package fr.cashmanager.rpc;
+package fr.cashmanager.rpc.clienthandler;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,7 +15,7 @@ abstract public class ClientHandler extends Thread {
      * main constructor
      * @param socket the socket associated to the client to handle
      */
-    ClientHandler(Socket socket) {
+    protected ClientHandler(Socket socket) {
         this.socket = socket;
     }
 

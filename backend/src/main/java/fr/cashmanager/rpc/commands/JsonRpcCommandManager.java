@@ -1,4 +1,4 @@
-package fr.cashmanager.rpc;
+package fr.cashmanager.rpc.commands;
 
 import java.util.HashMap;
 import java.util.Map;

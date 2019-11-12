@@ -7,11 +7,11 @@ import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.LocalFileConfig;
 import fr.cashmanager.impl.ioc.ServicesContainer;
 import fr.cashmanager.payment.PaymentProcessingService;
-import fr.cashmanager.rpc.ClientHandlerFactory;
-import fr.cashmanager.rpc.IServer;
-import fr.cashmanager.rpc.JsonRpcClientHandlerFactory;
-import fr.cashmanager.rpc.JsonRpcCommandManager;
-import fr.cashmanager.rpc.SocketServer;
+import fr.cashmanager.rpc.clienthandler.ClientHandlerFactory;
+import fr.cashmanager.rpc.clienthandler.JsonRpcClientHandlerFactory;
+import fr.cashmanager.rpc.commands.JsonRpcCommandManager;
+import fr.cashmanager.rpc.server.IServer;
+import fr.cashmanager.rpc.server.SocketServer;
 import fr.cashmanager.user.InMemoryUserManagementService;
 import fr.cashmanager.user.UserManagementService;
 

@@ -1,4 +1,4 @@
-package fr.cashmanager.rpc;
+package fr.cashmanager.rpc.clienthandler;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -13,12 +13,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import fr.cashmanager.impl.helpers.JsonMapperFactory;
+import fr.cashmanager.rpc.commands.IJsonRpcCommand;
+import fr.cashmanager.rpc.commands.JsonRpcCommandManager;
+
 /**
  * JsonRpcClientHandler
  */
 public class JsonRpcClientHandler extends ClientHandler {
 
-    private ObjectMapper mapper = new ObjectMapper();
     private JsonRpcCommandManager commandManager;
 
     /**
@@ -40,6 +43,7 @@ public class JsonRpcClientHandler extends ClientHandler {
     public void handleClient(InputStream is, OutputStream os) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         OutputStreamWriter writer = new OutputStreamWriter(os, StandardCharsets.UTF_8);
+        ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
         do {
             try {
                 String commandAsString = reader.readLine();
@@ -71,6 +75,7 @@ public class JsonRpcClientHandler extends ClientHandler {
      * @throws Exception if an exception occur durring the process
      */
     private JsonNode parseAndExecuteCommand(JsonNode tree) throws Exception {
+        ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
         String method = getMethod(tree);
         if (method == null) {
             throw new Exception("no method for command [" + mapper.writeValueAsString(tree) + "]");
@@ -94,6 +99,7 @@ public class JsonRpcClientHandler extends ClientHandler {
      * @return the formated JSON Object
      */
     private JsonNode formatClientResult(int id, JsonNode commandResult) {
+        ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
         ObjectNode result = mapper.createObjectNode();
         result.put("jsonrpc", "2.0");
         result.put("id", id);
@@ -107,6 +113,7 @@ public class JsonRpcClientHandler extends ClientHandler {
      * @return the formated JSON Object
      */
     private JsonNode formatClientError(Exception e) {
+        ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
         ObjectNode errorNode = mapper.createObjectNode();
         errorNode.put("code", -42);
         errorNode.put("message", e.getMessage());

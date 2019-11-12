@@ -1,4 +1,4 @@
-package fr.cashmanager.rpc;
+package fr.cashmanager.rpc.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -8,15 +8,15 @@ import java.net.SocketException;
 import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.Preference;
 import fr.cashmanager.impl.ioc.ServicesContainer;
+import fr.cashmanager.rpc.clienthandler.ClientHandler;
+import fr.cashmanager.rpc.clienthandler.ClientHandlerFactory;
 
 /**
  * SocketServer
  */
 public class SocketServer implements IServer {
 
-    // services
-    ClientHandlerFactory clientFactory;
-    IConfig config;
+    private ServicesContainer services;
 
     // attributes
     boolean isRunning = false;
@@ -29,12 +29,12 @@ public class SocketServer implements IServer {
      * @param clientFactory the clientfactory
      * @throws IllegalArgumentException
      */
-    public SocketServer(ServicesContainer container) throws IllegalArgumentException {
-        this.config = container.get(IConfig.class);
-        this.clientFactory = container.get(ClientHandlerFactory.class);
+    public SocketServer(ServicesContainer services) throws IllegalArgumentException {
+        this.services = services;
     }
 
     public void listen() throws IOException {
+        ClientHandlerFactory clientFactory = services.get(ClientHandlerFactory.class);
         int port = this.getPort();
         this.serverSocket = new ServerSocket(port);
         this.isRunning = true;
@@ -69,6 +69,7 @@ public class SocketServer implements IServer {
     }
 
     private int getPort() {
+        IConfig config = services.get(IConfig.class);
         try {
             return Integer.parseInt(config.getPreference(Preference.SERVER_PORT));
         } catch (NumberFormatException e) {

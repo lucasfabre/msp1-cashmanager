@@ -1,4 +1,4 @@
-package fr.cashmanager.rpc;
+package fr.cashmanager.rpc.clienthandler;
 
 import java.net.Socket;
 

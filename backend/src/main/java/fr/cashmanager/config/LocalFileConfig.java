@@ -21,9 +21,7 @@ public class LocalFileConfig implements IConfig {
     // The property is set by spring
     private String filePathAString = null;
 
-    // Used services
-    private BankAccountManagementService    bankAccountManagementService;
-    private UserManagementService           userManagementService;
+    private ServicesContainer services;
 
     // Loaded Preferences
     private Map<String, String>  preferences;
@@ -42,13 +40,12 @@ public class LocalFileConfig implements IConfig {
      * require: BankAccountManagementService, UserManagementService
      * @param ServicesContainer the ioc container
      */
-    public LocalFileConfig(ServicesContainer container) {
+    public LocalFileConfig(ServicesContainer services) {
+        this.services = services;
         String localfilePropertyValue = System.getProperty("cashmanager.config.localfile");
         if (localfilePropertyValue != null) {
             this.filePathAString = localfilePropertyValue;
         }
-        this.bankAccountManagementService = container.get(BankAccountManagementService.class);
-        this.userManagementService = container.get(UserManagementService.class);
     }
 
     /**
@@ -57,6 +54,8 @@ public class LocalFileConfig implements IConfig {
      */
     @Override
     public void configure() throws Exception {
+        BankAccountManagementService bankAccountManagementService = services.get(BankAccountManagementService.class);
+        UserManagementService userManagementService = services.get(UserManagementService.class);
         ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
         if (this.filePathAString == null) {
             throw new Exception("No config file provided, please set the cashmanager.config.localfile property");

@@ -8,7 +8,7 @@ import fr.cashmanager.accounts.Account;
 import fr.cashmanager.accounts.BankAccountManagementService;
 import fr.cashmanager.impl.helpers.JsonMapperFactory;
 import fr.cashmanager.impl.ioc.ServicesContainer;
-import fr.cashmanager.rpc.IJsonRpcCommand;
+import fr.cashmanager.rpc.commands.IJsonRpcCommand;
 
 /**
  * GetAccount

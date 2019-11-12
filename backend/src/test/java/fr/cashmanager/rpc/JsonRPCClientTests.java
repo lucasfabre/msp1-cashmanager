@@ -19,7 +19,14 @@ import org.junit.Test;
 
 import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.Preference;
+import fr.cashmanager.impl.helpers.JsonMapperFactory;
 import fr.cashmanager.impl.ioc.ServicesContainer;
+import fr.cashmanager.rpc.clienthandler.ClientHandlerFactory;
+import fr.cashmanager.rpc.clienthandler.JsonRpcClientHandlerFactory;
+import fr.cashmanager.rpc.commands.IJsonRpcCommand;
+import fr.cashmanager.rpc.commands.JsonRpcCommandManager;
+import fr.cashmanager.rpc.server.IServer;
+import fr.cashmanager.rpc.server.SocketServer;
 import junit.framework.TestCase;
 
 /**
@@ -29,7 +36,6 @@ public class JsonRPCClientTests extends TestCase {
 
     public final int SERVER_PORT = 3812;
 
-    private static ObjectMapper mapper = new ObjectMapper();
     public IConfig config;
     public ClientHandlerFactory clientHandlerFactory;
     public static IServer server;
@@ -38,6 +44,7 @@ public class JsonRPCClientTests extends TestCase {
         private List<Integer> params = null;
         @Override
         public void parseParams(JsonNode params) throws Exception {
+            ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
             JavaType jt = mapper.getTypeFactory().constructType(new TypeReference<List<Integer>>(){});
             this.params = mapper.readValue(mapper.treeAsTokens(params), jt);
         }
@@ -49,6 +56,7 @@ public class JsonRPCClientTests extends TestCase {
 
         @Override
         public JsonNode execute() throws Exception {
+            ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
             Integer result = params.stream().reduce((a, b) -> a - b).get();
             ObjectNode commandResult = mapper.createObjectNode();
             commandResult.put("value", result);
@@ -99,6 +107,7 @@ public class JsonRPCClientTests extends TestCase {
 
     @Test(timeout = 10000)
     public void testSocket() throws Exception {
+        ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
         Thread serverThread = new Thread() {
             @Override
             public void run() {

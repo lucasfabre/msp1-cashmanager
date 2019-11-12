@@ -15,6 +15,10 @@ import org.junit.Test;
 import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.Preference;
 import fr.cashmanager.impl.ioc.ServicesContainer;
+import fr.cashmanager.rpc.clienthandler.ClientHandler;
+import fr.cashmanager.rpc.clienthandler.ClientHandlerFactory;
+import fr.cashmanager.rpc.server.IServer;
+import fr.cashmanager.rpc.server.SocketServer;
 import junit.framework.TestCase;
 
 /**
