@@ -20,6 +20,7 @@ public class CommandDescribeAccount implements IJsonRpcCommand {
 
     /**
      * default constructor
+     * require: BankAccountManagementService
      */
     public CommandDescribeAccount(ServicesContainer serviceContainer) {
         this.services = serviceContainer;
