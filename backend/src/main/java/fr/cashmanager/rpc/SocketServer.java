@@ -7,6 +7,7 @@ import java.net.SocketException;
 
 import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.Preference;
+import fr.cashmanager.impl.ioc.ServicesContainer;
 
 /**
  * SocketServer
@@ -15,29 +16,27 @@ public class SocketServer implements IServer {
 
     // services
     ClientHandlerFactory clientFactory;
+    IConfig config;
 
     // attributes
-    private int port;
     boolean isRunning = false;
     ServerSocket serverSocket = null;
 
     /**
      * init the server with the diferents services
+     * require: IConfig, ClientHandlerFactory
      * @param config the config
      * @param clientFactory the clientfactory
      * @throws IllegalArgumentException
      */
-    SocketServer(IConfig config, ClientHandlerFactory clientFactory) throws IllegalArgumentException {
-        this.clientFactory = clientFactory;
-        try {
-            this.port = Integer.parseInt(config.getPreference(Preference.SERVER_PORT));
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Error while parsing the server port in the configuration", e);
-        }
+    public SocketServer(ServicesContainer container) throws IllegalArgumentException {
+        this.config = container.get(IConfig.class);
+        this.clientFactory = container.get(ClientHandlerFactory.class);
     }
 
     public void listen() throws IOException {
-        this.serverSocket = new ServerSocket(this.port);
+        int port = this.getPort();
+        this.serverSocket = new ServerSocket(port);
         this.isRunning = true;
         while (this.isRunning) {
             try {
@@ -67,5 +66,13 @@ public class SocketServer implements IServer {
     @Override
     public void stop() throws IOException {
         serverSocket.close();
+    }
+
+    private int getPort() {
+        try {
+            return Integer.parseInt(config.getPreference(Preference.SERVER_PORT));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Error while parsing the server port in the configuration", e);
+        }
     }
 }

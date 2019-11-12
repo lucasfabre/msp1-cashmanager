@@ -32,13 +32,14 @@ function cmpackage {
     docker run $DOCKER_RUN_ARGS openjdk:11.0-jdk-slim bash -c "cd '/app/backend';
     set -e;
     ./mvnw package;
-    cp /app/backend/target/cashmanager-0.0.1.jar /app/dist/cashmanager-backend.jar;
+    cp /app/backend/target/cashmanager-0.0.1-jar-with-dependencies.jar /app/dist/cashmanager-backend.jar;
     chown $UID:$GID /app/dist/cashmanager-backend.jar;
     "
 }
 
 function cmdocker {
     test -f $DIR/dist/cashmanager-backend.jar || cmpackage
+    cp $DIR/backend/CashManagerConfig.json $DIR/dist/CashManagerConfig.json
     docker build $DIR/dist/ -t cashmanager-backend -f $DIR/build/Dockerfiles/Backend
 }
 

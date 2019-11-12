@@ -1,5 +1,6 @@
 FROM openjdk:11.0-jre-slim
 
 COPY ./cashmanager-backend.jar /cashmanager-backend.jar
+COPY ./CashManagerConfig.json /CashManagerConfig.json
 
-ENTRYPOINT java -jar /cashmanager-backend.jar
+ENTRYPOINT java -Dcashmanager.config.localfile=/CashManagerConfig.json -jar /cashmanager-backend.jar

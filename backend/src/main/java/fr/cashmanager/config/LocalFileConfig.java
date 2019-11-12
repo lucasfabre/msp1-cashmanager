@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.cashmanager.accounts.Account;
 import fr.cashmanager.accounts.BankAccountManagementService;
+import fr.cashmanager.impl.ioc.ServicesContainer;
 import fr.cashmanager.user.User;
 import fr.cashmanager.user.UserManagementService;
 
@@ -38,14 +39,18 @@ public class LocalFileConfig implements IConfig {
         public Map<String, String>  preferences;
     }
 
-    public LocalFileConfig(BankAccountManagementService bankAccountManagementService,
-                            UserManagementService userManagementService) {
+    /**
+     * default constructor
+     * require: BankAccountManagementService, UserManagementService
+     * @param ServicesContainer the ioc container
+     */
+    public LocalFileConfig(ServicesContainer container) {
         String localfilePropertyValue = System.getProperty("cashmanager.config.localfile");
         if (localfilePropertyValue != null) {
             this.filePathAString = localfilePropertyValue;
         }
-        this.bankAccountManagementService = bankAccountManagementService;
-        this.userManagementService = userManagementService;
+        this.bankAccountManagementService = container.get(BankAccountManagementService.class);
+        this.userManagementService = container.get(UserManagementService.class);;
     }
 
     /**

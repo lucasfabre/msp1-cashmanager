@@ -7,17 +7,20 @@ import org.junit.Test;
 
 import fr.cashmanager.accounts.BankAccountManagementService;
 import fr.cashmanager.accounts.InMemoryBankAccountManagementService;
+import fr.cashmanager.impl.ioc.ServicesContainer;
 
 /**
  * PaymentProcessingServiceTests
  */
 public class PaymentProcessingServiceTests {
 
-    private static BankAccountManagementService bankAccountManagementService;
+    private BankAccountManagementService bankAccountManagementService;
+    private ServicesContainer container = new ServicesContainer();
 
     @Before
     public void setUp() {
         bankAccountManagementService = new InMemoryBankAccountManagementService();
+        container.register(BankAccountManagementService.class, bankAccountManagementService);
     }
 
     /**
@@ -45,7 +48,7 @@ public class PaymentProcessingServiceTests {
         };
 
         // process the transaction
-        PaymentProcessingService service = new PaymentProcessingService(bankAccountManagementService);
+        PaymentProcessingService service = new PaymentProcessingService(container);
         service.processTransaction(payment);
 
         // check the result
@@ -78,7 +81,7 @@ public class PaymentProcessingServiceTests {
         };
 
         // process the transaction
-        PaymentProcessingService service = new PaymentProcessingService(bankAccountManagementService);
+        PaymentProcessingService service = new PaymentProcessingService(container);
         try {
            service.processTransaction(payment);
         } catch (Exception e) {

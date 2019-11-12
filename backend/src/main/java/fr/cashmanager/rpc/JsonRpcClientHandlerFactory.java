@@ -2,6 +2,8 @@ package fr.cashmanager.rpc;
 
 import java.net.Socket;
 
+import fr.cashmanager.impl.ioc.ServicesContainer;
+
 /**
  * JsonRpcClientHandlerFactory
  */
@@ -11,10 +13,11 @@ public class JsonRpcClientHandlerFactory implements ClientHandlerFactory {
 
     /**
      * default constructor
+     * require: JsonRpcCommandManager
      * @param commandManager
      */
-    JsonRpcClientHandlerFactory(JsonRpcCommandManager commandManager) {
-        this.commandManager = commandManager;
+    public JsonRpcClientHandlerFactory(ServicesContainer container) {
+        this.commandManager = container.get(JsonRpcCommandManager.class);
     }
 
 

@@ -1,6 +1,7 @@
 package fr.cashmanager.payment;
 
 import fr.cashmanager.accounts.BankAccountManagementService;
+import fr.cashmanager.impl.ioc.ServicesContainer;
 
 /**
  * PaymentProcessingService
@@ -9,8 +10,13 @@ public class PaymentProcessingService {
 
     private BankAccountManagementService bankAccountManagementService;
 
-    public PaymentProcessingService(BankAccountManagementService bankAccountManagementService) {
-        this.bankAccountManagementService = bankAccountManagementService;
+    /**
+     * default constructor
+     * require: BankAccountManagementService
+     * @param container the ioc container
+     */
+    public PaymentProcessingService(ServicesContainer container) {
+        this.bankAccountManagementService = container.get(BankAccountManagementService.class);
     }
 
     /**

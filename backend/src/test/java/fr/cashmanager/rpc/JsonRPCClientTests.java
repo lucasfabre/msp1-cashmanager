@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.Preference;
+import fr.cashmanager.impl.ioc.ServicesContainer;
 import junit.framework.TestCase;
 
 /**
@@ -35,6 +36,7 @@ public class JsonRPCClientTests extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
+        ServicesContainer container = new ServicesContainer();
         // IConfig
         this.config = new IConfig() {
             Map<String, String> preference = new HashMap<String, String>();
@@ -49,6 +51,7 @@ public class JsonRPCClientTests extends TestCase {
                 preference.put(Preference.SERVER_PORT.getName(), Integer.valueOf(SERVER_PORT).toString());
             }
         };
+        container.register(IConfig.class, this.config);
         // JsonRpcCommandManager
         JsonRpcCommandManager jsonRpcCommandManager = new JsonRpcCommandManager();
         jsonRpcCommandManager.registerCommand(new IJsonRpcCommand(){
@@ -72,10 +75,15 @@ public class JsonRPCClientTests extends TestCase {
                 return commandResult;
             }
         });
+        container.register(JsonRpcCommandManager.class, jsonRpcCommandManager);
         // ClientHandlerFactory
-        this.clientHandlerFactory = new JsonRpcClientHandlerFactory(jsonRpcCommandManager);
+        this.clientHandlerFactory = new JsonRpcClientHandlerFactory(container);
+        container.register(ClientHandlerFactory.class, this.clientHandlerFactory);
+        // IServer
+        server = new SocketServer(container);
+        container.register(IServer.class, server);
+        // init
         this.config.configure();
-        server = new SocketServer(this.config, this.clientHandlerFactory);
     }
 
     @Test(timeout = 10000)
