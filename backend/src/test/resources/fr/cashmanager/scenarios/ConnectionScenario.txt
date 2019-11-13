@@ -1,0 +1,8 @@
+> dadadada
+< {"jsonrpc":"2.0","error":{"code":-32600,"message":"Invalid Request"}}
+> {"jsonrpc": "2.0", "method": "DescribeAccount", "params": { "accountId": "acc1" }, "id": 2}    
+< {"jsonrpc":"2.0","id":2,"error":{"code":-32022,"message":"Not authenticated"}}
+> {"jsonrpc": "2.0", "method": "Login", "params": { "id": "user1", "password": "p1" }, "id": 1}
+< {"jsonrpc":"2.0","result":{"success":true}}
+> {"jsonrpc": "2.0", "method": "DescribeAccount", "params": { "accountId": "acc1" }, "id": 2}
+< {"jsonrpc":"2.0","result":{"id":"acc1","balance":12.04}}

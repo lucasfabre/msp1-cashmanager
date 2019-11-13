@@ -10,7 +10,7 @@ import fr.cashmanager.impl.helpers.JsonMapperFactory;
 import fr.cashmanager.impl.ioc.ServicesContainer;
 import fr.cashmanager.rpc.commands.IJsonRpcCommand;
 import fr.cashmanager.rpc.exception.JsonRpcException;
-import fr.cashmanager.rpc.exception.StandardJsonRpcErrorCode;
+import fr.cashmanager.rpc.exception.JsonRpcErrorCode;
 
 /**
  * GetAccount
@@ -43,7 +43,7 @@ public class CommandDescribeAccount implements IJsonRpcCommand {
     public void parseParams(JsonNode params) throws JsonRpcException {
         this.accountId = params.path("accountId").asText();
         if (accountId == null || "".equals(accountId)) {
-            throw new JsonRpcException(StandardJsonRpcErrorCode.INVALID_PARAMS.getCode(), "accountId param is null or empty");
+            throw new JsonRpcException(JsonRpcErrorCode.INVALID_PARAMS.getCode(), "accountId param is null or empty");
         }
     }
 
@@ -57,7 +57,7 @@ public class CommandDescribeAccount implements IJsonRpcCommand {
         try {
             account = bankAccountManagementService.getAccountForId(this.accountId);
         } catch (NoSuchElementException e) {
-            throw new JsonRpcException(StandardJsonRpcErrorCode.INVALID_PARAMS.getCode(), e.getMessage());
+            throw new JsonRpcException(JsonRpcErrorCode.INVALID_PARAMS.getCode(), e.getMessage());
         }
 		return JsonMapperFactory.getObjectMapper().valueToTree(account);
 	}

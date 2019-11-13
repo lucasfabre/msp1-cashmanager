@@ -2,26 +2,22 @@ package fr.cashmanager.integration;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.BufferedReader;
 import java.io.File;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.Before;
-import org.junit.Test;
 
 import fr.cashmanager.CashManager;
 import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.Preference;
-import fr.cashmanager.impl.helpers.JsonMapperFactory;
 import fr.cashmanager.testutils.TestHelper;
 
 /**
  * IntegrationTests
  */
-public class IntegrationTests extends IntegrationTestBase {
-
-    protected int SERVER_PORT = 3814;
+public abstract class ScenarioTestBase extends IntegrationTestBase {
 
     @Before
     @Override
@@ -39,19 +35,26 @@ public class IntegrationTests extends IntegrationTestBase {
         CashManager.initServices(services);
         CashManager.initCommandsAndMiddlewares(services);
         // change the server port
-        mockedLocalFileConfig.setPreference(Preference.SERVER_PORT.getName(), Integer.valueOf(SERVER_PORT).toString());
+        mockedLocalFileConfig.setPreference(Preference.SERVER_PORT.getName(), Integer.valueOf(getServerPort()).toString());
     }
 
-    @Test
-    public void testSocket() throws Exception {
-        ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
+    protected void runScenario(String scenarioResource) throws Exception {
         waitForServerStarted();
-        // Client
-        initClientConection(SERVER_PORT);
-        String response = writeMessageAndWaitResponse("{\"jsonrpc\": \"2.0\", \"method\": \"DescribeAccount\", \"params\": { \"accountId\": \"acc1\" }, \"id\": 2}");
-        JsonNode res = mapper.readTree(response);
-        assertEquals(Double.valueOf(12.04), Double.valueOf(res.path("result").path("balance").asDouble()));
+        initClientConection(getServerPort());
+        BufferedReader scenarioReader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(scenarioResource), StandardCharsets.UTF_8));
+        String scenarioline = scenarioReader.readLine();
+        String lastReceivedLine = "";
+        while (scenarioline != null && false == "".equals(scenarioline)) {
+            if (scenarioline.startsWith("> ")) {
+                lastReceivedLine = writeMessageAndWaitResponse(scenarioline.substring(2));
+            } else {
+                assertEquals(scenarioline.substring(2), lastReceivedLine);
+            }
+            scenarioline = scenarioReader.readLine();
+        }
         closeConectionAndStopServer();
     }
+
+    protected abstract int getServerPort();
 
 }

@@ -12,6 +12,7 @@ import fr.cashmanager.payment.PaymentProcessingService;
 import fr.cashmanager.rpc.clienthandler.ClientHandlerFactory;
 import fr.cashmanager.rpc.clienthandler.JsonRpcClientHandlerFactory;
 import fr.cashmanager.rpc.commands.JsonRpcCommandManager;
+import fr.cashmanager.rpc.middlewares.AuthenticationMiddleware;
 import fr.cashmanager.rpc.middlewares.CommandMiddleware;
 import fr.cashmanager.rpc.middlewares.ErrorMiddleware;
 import fr.cashmanager.rpc.server.IServer;
@@ -59,6 +60,7 @@ public class CashManager {
         commandManager.registerCommand(new CommandDescribeAccount(services));
 
         commandManager.registerMiddleware(new ErrorMiddleware());
+        commandManager.registerMiddleware(new AuthenticationMiddleware(services));
         commandManager.registerMiddleware(new CommandMiddleware(services));
     }
 

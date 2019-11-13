@@ -19,7 +19,7 @@ public class JsonRpcException extends Exception {
         this.code = code;
     }
 
-    public JsonRpcException(StandardJsonRpcErrorCode err) {
+    public JsonRpcException(JsonRpcErrorCode err) {
         this(err.getCode(), err.getMessage());
     }
 
