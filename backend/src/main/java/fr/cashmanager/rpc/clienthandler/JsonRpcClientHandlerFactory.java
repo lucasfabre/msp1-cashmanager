@@ -11,14 +11,16 @@ import fr.cashmanager.rpc.commands.JsonRpcCommandManager;
 public class JsonRpcClientHandlerFactory implements ClientHandlerFactory {
     
     private JsonRpcCommandManager commandManager;
+    private ServicesContainer services;
 
     /**
      * default constructor
      * require: JsonRpcCommandManager
      * @param commandManager
      */
-    public JsonRpcClientHandlerFactory(ServicesContainer container) {
-        this.commandManager = container.get(JsonRpcCommandManager.class);
+    public JsonRpcClientHandlerFactory(ServicesContainer services) {
+        this.commandManager = services.get(JsonRpcCommandManager.class);
+        this.services = services;
     }
 
 
@@ -28,6 +30,6 @@ public class JsonRpcClientHandlerFactory implements ClientHandlerFactory {
      */
     @Override
     public ClientHandler create(Socket socket) {
-        return new JsonRpcClientHandler(commandManager, socket);
+        return new JsonRpcClientHandler(services, commandManager, socket);
     }
 } 

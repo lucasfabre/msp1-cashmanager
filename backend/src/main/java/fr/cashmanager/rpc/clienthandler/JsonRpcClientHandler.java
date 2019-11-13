@@ -14,6 +14,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import fr.cashmanager.impl.helpers.JsonMapperFactory;
+import fr.cashmanager.impl.ioc.ServicesContainer;
+import fr.cashmanager.logging.Logger;
+import fr.cashmanager.logging.LoggerFactory;
 import fr.cashmanager.rpc.commands.IJsonRpcCommand;
 import fr.cashmanager.rpc.commands.JsonRpcCommandManager;
 
@@ -23,14 +26,16 @@ import fr.cashmanager.rpc.commands.JsonRpcCommandManager;
 public class JsonRpcClientHandler extends ClientHandler {
 
     private JsonRpcCommandManager commandManager;
+    private Logger log;
 
     /**
      * default constructor
      * @param commandManager the command manager
      * @param socket the client socket
      */
-    JsonRpcClientHandler(JsonRpcCommandManager commandManager, Socket socket) {
+    JsonRpcClientHandler(ServicesContainer services, JsonRpcCommandManager commandManager, Socket socket) {
         super(socket);
+        this.log = services.get(LoggerFactory.class).getLogger("JsonRpcClientHandler");
         this.commandManager = commandManager;
     }
 
@@ -41,12 +46,14 @@ public class JsonRpcClientHandler extends ClientHandler {
      */
     @Override
     public void handleClient(InputStream is, OutputStream os) throws Exception {
+        log.info("Client connected");
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         OutputStreamWriter writer = new OutputStreamWriter(os, StandardCharsets.UTF_8);
         ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
+        String commandAsString = "";
         do {
             try {
-                String commandAsString = reader.readLine();
+                commandAsString = reader.readLine();
                 if (commandAsString == null) {
                     continue;
                 }
@@ -57,15 +64,14 @@ public class JsonRpcClientHandler extends ClientHandler {
                 writer.write(clientResultAsString);
                 writer.write("\n");
                 writer.flush();
-            } catch (SocketException e) {
-                // client disconected so do not write the error to the client
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Exception while processing command", e);
                 JsonNode clientErrorJsonNode = formatClientError(e);
                 writer.write(mapper.writeValueAsString(clientErrorJsonNode) + "\n");
                 writer.flush();
             }
-        } while(this.getSocket().isConnected() == true);
+        } while(commandAsString != null);
+        log.info("Client disconected");
     }
 
     /**

@@ -8,6 +8,8 @@ import java.net.SocketException;
 import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.Preference;
 import fr.cashmanager.impl.ioc.ServicesContainer;
+import fr.cashmanager.logging.Logger;
+import fr.cashmanager.logging.LoggerFactory;
 import fr.cashmanager.rpc.clienthandler.ClientHandler;
 import fr.cashmanager.rpc.clienthandler.ClientHandlerFactory;
 
@@ -17,6 +19,7 @@ import fr.cashmanager.rpc.clienthandler.ClientHandlerFactory;
 public class SocketServer implements IServer {
 
     private ServicesContainer services;
+    private Logger log;
 
     // attributes
     boolean isRunning = false;
@@ -31,6 +34,7 @@ public class SocketServer implements IServer {
      */
     public SocketServer(ServicesContainer services) throws IllegalArgumentException {
         this.services = services;
+        this.log = services.get(LoggerFactory.class).getLogger("SocketServer");
     }
 
     public void listen() throws IOException {
@@ -38,6 +42,7 @@ public class SocketServer implements IServer {
         int port = this.getPort();
         this.serverSocket = new ServerSocket(port);
         this.isRunning = true;
+        log.info("Server started on port " + Integer.valueOf(port));
         while (this.isRunning) {
             try {
                 Socket socket = serverSocket.accept();

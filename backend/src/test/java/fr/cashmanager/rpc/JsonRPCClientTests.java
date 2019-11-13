@@ -21,6 +21,8 @@ import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.Preference;
 import fr.cashmanager.impl.helpers.JsonMapperFactory;
 import fr.cashmanager.impl.ioc.ServicesContainer;
+import fr.cashmanager.logging.LoggerFactory;
+import fr.cashmanager.logging.LoggerService;
 import fr.cashmanager.rpc.clienthandler.ClientHandlerFactory;
 import fr.cashmanager.rpc.clienthandler.JsonRpcClientHandlerFactory;
 import fr.cashmanager.rpc.commands.IJsonRpcCommand;
@@ -75,7 +77,7 @@ public class JsonRPCClientTests extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        ServicesContainer container = new ServicesContainer();
+        ServicesContainer services = new ServicesContainer();
         // IConfig
         this.config = new IConfig() {
             Map<String, String> preference = new HashMap<String, String>();
@@ -90,17 +92,22 @@ public class JsonRPCClientTests extends TestCase {
                 preference.put(Preference.SERVER_PORT.getName(), Integer.valueOf(SERVER_PORT).toString());
             }
         };
-        container.register(IConfig.class, this.config);
+        services.register(IConfig.class, this.config);
+        // Logging
+        LoggerService loggerService = new LoggerService(services);
+        services.register(LoggerService.class, loggerService);
+        LoggerFactory loggerFactory = new LoggerFactory(services);
+        services.register(LoggerFactory.class, loggerFactory);
         // JsonRpcCommandManager
         JsonRpcCommandManager jsonRpcCommandManager = new JsonRpcCommandManager();
         jsonRpcCommandManager.registerCommand(new SubstractCommand());
-        container.register(JsonRpcCommandManager.class, jsonRpcCommandManager);
+        services.register(JsonRpcCommandManager.class, jsonRpcCommandManager);
         // ClientHandlerFactory
-        this.clientHandlerFactory = new JsonRpcClientHandlerFactory(container);
-        container.register(ClientHandlerFactory.class, this.clientHandlerFactory);
+        this.clientHandlerFactory = new JsonRpcClientHandlerFactory(services);
+        services.register(ClientHandlerFactory.class, this.clientHandlerFactory);
         // IServer
-        server = new SocketServer(container);
-        container.register(IServer.class, server);
+        server = new SocketServer(services);
+        services.register(IServer.class, server);
         // init
         this.config.configure();
     }

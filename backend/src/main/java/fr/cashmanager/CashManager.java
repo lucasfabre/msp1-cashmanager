@@ -6,6 +6,8 @@ import fr.cashmanager.command.CommandDescribeAccount;
 import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.LocalFileConfig;
 import fr.cashmanager.impl.ioc.ServicesContainer;
+import fr.cashmanager.logging.LoggerFactory;
+import fr.cashmanager.logging.LoggerService;
 import fr.cashmanager.payment.PaymentProcessingService;
 import fr.cashmanager.rpc.clienthandler.ClientHandlerFactory;
 import fr.cashmanager.rpc.clienthandler.JsonRpcClientHandlerFactory;
@@ -60,29 +62,35 @@ public class CashManager {
      * @return the ioc container
      */
     public static ServicesContainer initContainer() {
-        ServicesContainer container = new ServicesContainer();
+        ServicesContainer services = new ServicesContainer();
         
+        IConfig config = new LocalFileConfig(services);
+        services.register(IConfig.class, config);
+
+        LoggerService loggerService = new LoggerService(services);
+        services.register(LoggerService.class, loggerService);
+
+        LoggerFactory loggerFactory = new LoggerFactory(services);
+        services.register(LoggerFactory.class, loggerFactory);
+
         UserManagementService userManagementService = new InMemoryUserManagementService();
-        container.register(UserManagementService.class, userManagementService);
+        services.register(UserManagementService.class, userManagementService);
 
         BankAccountManagementService bankAccountManagementService = new InMemoryBankAccountManagementService();
-        container.register(BankAccountManagementService.class, bankAccountManagementService);
+        services.register(BankAccountManagementService.class, bankAccountManagementService);
 
-        IConfig config = new LocalFileConfig(container);
-        container.register(IConfig.class, config);
-
-        PaymentProcessingService paymentProcessingService = new PaymentProcessingService(container);
-        container.register(PaymentProcessingService.class, paymentProcessingService);
+        PaymentProcessingService paymentProcessingService = new PaymentProcessingService(services);
+        services.register(PaymentProcessingService.class, paymentProcessingService);
 
         JsonRpcCommandManager jsonRpcCommandManager = new JsonRpcCommandManager();
-        container.register(JsonRpcCommandManager.class, jsonRpcCommandManager);
+        services.register(JsonRpcCommandManager.class, jsonRpcCommandManager);
 
-        ClientHandlerFactory clientHandlerFactory = new JsonRpcClientHandlerFactory(container);
-        container.register(ClientHandlerFactory.class, clientHandlerFactory);
+        ClientHandlerFactory clientHandlerFactory = new JsonRpcClientHandlerFactory(services);
+        services.register(ClientHandlerFactory.class, clientHandlerFactory);
 
-        IServer server = new SocketServer(container);
-        container.register(IServer.class, server);
+        IServer server = new SocketServer(services);
+        services.register(IServer.class, server);
 
-        return container;
+        return services;
     }
 }
