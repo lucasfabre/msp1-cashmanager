@@ -3,14 +3,12 @@ package fr.cashmanager.rpc.clienthandler;
 import java.net.Socket;
 
 import fr.cashmanager.impl.ioc.ServicesContainer;
-import fr.cashmanager.rpc.commands.JsonRpcCommandManager;
 
 /**
  * JsonRpcClientHandlerFactory
  */
 public class JsonRpcClientHandlerFactory implements ClientHandlerFactory {
     
-    private JsonRpcCommandManager commandManager;
     private ServicesContainer services;
 
     /**
@@ -19,7 +17,6 @@ public class JsonRpcClientHandlerFactory implements ClientHandlerFactory {
      * @param commandManager
      */
     public JsonRpcClientHandlerFactory(ServicesContainer services) {
-        this.commandManager = services.get(JsonRpcCommandManager.class);
         this.services = services;
     }
 
@@ -30,6 +27,6 @@ public class JsonRpcClientHandlerFactory implements ClientHandlerFactory {
      */
     @Override
     public ClientHandler create(Socket socket) {
-        return new JsonRpcClientHandler(services, commandManager, socket);
+        return new JsonRpcClientHandler(services, socket);
     }
 } 

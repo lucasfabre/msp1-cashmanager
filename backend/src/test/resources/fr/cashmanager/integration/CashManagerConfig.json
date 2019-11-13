@@ -1,0 +1,11 @@
+{
+    "accounts": [
+        { "id": "acc1", "balance": 12.04 }
+    ],
+    "users": [
+        { "id": "user1", "password": "p1" }
+    ],
+    "preferences": {
+        "server.port": "8080"
+    }
+}

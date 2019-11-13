@@ -1,6 +1,7 @@
 package fr.cashmanager.config;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class LocalFileConfig implements IConfig {
     private ServicesContainer services;
 
     // Loaded Preferences
-    private Map<String, String>  preferences;
+    protected Map<String, String>  preferences;
 
     /**
      * Local File DTO used for deserializing the JSON config file;
@@ -61,7 +62,7 @@ public class LocalFileConfig implements IConfig {
             throw new Exception("No config file provided, please set the cashmanager.config.localfile property");
         }
         LocalFileDTO fileConfig = mapper.readValue(new File(filePathAString), LocalFileDTO.class);
-        this.preferences = fileConfig.preferences;
+        this.preferences = new HashMap<String, String>(fileConfig.preferences);
         fileConfig.accounts.forEach((account) ->
             bankAccountManagementService.registerNewAcount(account.getId(), account.getBalance())
         );
