@@ -38,13 +38,14 @@ public class CommandMiddleware extends JsonRpcMiddleware {
      */
     private JsonNode parseAndExecuteCommand(JsonNode tree) throws JsonRpcException {
         String method = JsonRpcHelper.getMethod(tree);
-        if (method == null) {
+        if (method == null || JsonRpcHelper.getId(tree) < 1) {
             throw new JsonRpcException(StandardJsonRpcErrorCode.INVALID_REQUEST);
         }
-        IJsonRpcCommand command = services.get(JsonRpcCommandManager.class).getCommandForMethod(method).newInstance();
+        IJsonRpcCommand command = services.get(JsonRpcCommandManager.class).getCommandForMethod(method);
         if (command == null) {
             throw new JsonRpcException(StandardJsonRpcErrorCode.METHOD_NOT_FOUND);
         }
+        command = command.newInstance();
         JsonNode params = JsonRpcHelper.getParams(tree);
         if (params == null) {
             throw new JsonRpcException(StandardJsonRpcErrorCode.INVALID_PARAMS);

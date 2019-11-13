@@ -3,6 +3,7 @@ package fr.cashmanager.rpc.middlewares;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import fr.cashmanager.rpc.exception.JsonRpcException;
+import fr.cashmanager.rpc.exception.StandardJsonRpcErrorCode;
 import fr.cashmanager.rpc.helpers.JsonRpcHelper;
 
 /**
@@ -16,10 +17,15 @@ public class ErrorMiddleware extends JsonRpcMiddleware {
 		try {
             return next();
         } catch (JsonRpcException e) {
-            int commandId = JsonRpcHelper.getId(body); 
-            return JsonRpcHelper.formatClientError(
-                (commandId != 0) ? Integer.valueOf(commandId) : null, e);
+            return JsonRpcHelper.formatClientError(getCommandIdOrNull(), e);
+        } catch (Exception e) {
+            return JsonRpcHelper.formatClientError(getCommandIdOrNull(), new JsonRpcException(StandardJsonRpcErrorCode.INTERNAL_ERROR));
         }
-	}
+    }
+    
+    public Integer getCommandIdOrNull() {
+        int commandId = JsonRpcHelper.getId(body); 
+        return (commandId != 0) ? Integer.valueOf(commandId) : null;
+    }
     
 }
