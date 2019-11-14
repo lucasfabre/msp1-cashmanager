@@ -1,10 +1,8 @@
-package fr.cashmanager.rpc;
+package fr.cashmanager.integration;
 
-import java.io.BufferedReader;
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,38 +13,44 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.Preference;
 import fr.cashmanager.impl.helpers.JsonMapperFactory;
-import fr.cashmanager.impl.ioc.ServicesContainer;
+import fr.cashmanager.logging.LoggerFactory;
+import fr.cashmanager.logging.LoggerService;
 import fr.cashmanager.rpc.clienthandler.ClientHandlerFactory;
 import fr.cashmanager.rpc.clienthandler.JsonRpcClientHandlerFactory;
 import fr.cashmanager.rpc.commands.IJsonRpcCommand;
 import fr.cashmanager.rpc.commands.JsonRpcCommandManager;
+import fr.cashmanager.rpc.exception.JsonRpcException;
+import fr.cashmanager.rpc.exception.StandardJsonRpcErrorCode;
+import fr.cashmanager.rpc.middlewares.CommandMiddleware;
+import fr.cashmanager.rpc.middlewares.ErrorMiddleware;
 import fr.cashmanager.rpc.server.IServer;
 import fr.cashmanager.rpc.server.SocketServer;
-import junit.framework.TestCase;
 
 /**
  * SocketServerTests
  */
-public class JsonRPCClientTests extends TestCase {
+public class JsonRPCClientTests extends IntegrationTestBase {
 
-    public final int SERVER_PORT = 3812;
-
-    public IConfig config;
-    public ClientHandlerFactory clientHandlerFactory;
-    public static IServer server;
+    protected int SERVER_PORT = 3812;
 
     class SubstractCommand implements IJsonRpcCommand {
         private List<Integer> params = null;
         @Override
-        public void parseParams(JsonNode params) throws Exception {
+        public void parseParams(JsonNode params) throws JsonRpcException {
             ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
-            JavaType jt = mapper.getTypeFactory().constructType(new TypeReference<List<Integer>>(){});
-            this.params = mapper.readValue(mapper.treeAsTokens(params), jt);
+            JavaType jt = mapper.getTypeFactory().constructType(new TypeReference<List<Integer>>() {
+            });
+            try {
+                this.params = mapper.readValue(mapper.treeAsTokens(params), jt);
+            } catch (IOException e) {
+                throw new JsonRpcException(StandardJsonRpcErrorCode.INVALID_PARAMS);
+			}
         }
 
         @Override
@@ -55,7 +59,7 @@ public class JsonRPCClientTests extends TestCase {
         }
 
         @Override
-        public JsonNode execute() throws Exception {
+        public JsonNode execute() throws JsonRpcException {
             ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
             Integer result = params.stream().reduce((a, b) -> a - b).get();
             ObjectNode commandResult = mapper.createObjectNode();
@@ -73,11 +77,10 @@ public class JsonRPCClientTests extends TestCase {
         }
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        ServicesContainer container = new ServicesContainer();
+    @Before
+    public void setUpAppContext() throws Exception {
         // IConfig
-        this.config = new IConfig() {
+        IConfig config = new IConfig() {
             Map<String, String> preference = new HashMap<String, String>();
 
             @Override
@@ -90,48 +93,38 @@ public class JsonRPCClientTests extends TestCase {
                 preference.put(Preference.SERVER_PORT.getName(), Integer.valueOf(SERVER_PORT).toString());
             }
         };
-        container.register(IConfig.class, this.config);
+        services.register(IConfig.class, config);
+        // Logging
+        LoggerService loggerService = new LoggerService(services);
+        services.register(LoggerService.class, loggerService);
+        LoggerFactory loggerFactory = new LoggerFactory(services);
+        services.register(LoggerFactory.class, loggerFactory);
         // JsonRpcCommandManager
         JsonRpcCommandManager jsonRpcCommandManager = new JsonRpcCommandManager();
         jsonRpcCommandManager.registerCommand(new SubstractCommand());
-        container.register(JsonRpcCommandManager.class, jsonRpcCommandManager);
+        jsonRpcCommandManager.registerMiddleware(new ErrorMiddleware());
+        jsonRpcCommandManager.registerMiddleware(new CommandMiddleware(services));
+        services.register(JsonRpcCommandManager.class, jsonRpcCommandManager);
         // ClientHandlerFactory
-        this.clientHandlerFactory = new JsonRpcClientHandlerFactory(container);
-        container.register(ClientHandlerFactory.class, this.clientHandlerFactory);
+        ClientHandlerFactory clientHandlerFactory = new JsonRpcClientHandlerFactory(services);
+        services.register(ClientHandlerFactory.class, clientHandlerFactory);
         // IServer
-        server = new SocketServer(container);
-        container.register(IServer.class, server);
+        SocketServer server = new SocketServer(services);
+        services.register(IServer.class, server);
         // init
-        this.config.configure();
+        config.configure();
     }
 
-    @Test(timeout = 10000)
+    @Test
     public void testSocket() throws Exception {
         ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
-        Thread serverThread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    server.listen();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        };
-        serverThread.start();
-        while (server.isRunning() == false) {
-            Thread.sleep(500);
-        }
+        waitForServerStarted();
         // Client
-        Socket socket = new Socket("localhost", SERVER_PORT);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream());
-        writer.write("{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23], \"id\": 1}\n");
-        writer.flush();
-        JsonNode res = mapper.readTree(reader.readLine());
+        initClientConection(SERVER_PORT);
+        String response = writeMessageAndWaitResponse("{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23], \"id\": 1}");
+        JsonNode res = mapper.readTree(response);
         assertEquals(res.path("result").path("value").asInt(), 19);
-        socket.close();
-        server.stop();
+        closeConectionAndStopServer();
     }
     
 }

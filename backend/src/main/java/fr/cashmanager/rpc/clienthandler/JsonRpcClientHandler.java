@@ -6,32 +6,42 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Queue;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import fr.cashmanager.impl.helpers.JsonMapperFactory;
-import fr.cashmanager.rpc.commands.IJsonRpcCommand;
+import fr.cashmanager.impl.ioc.ServicesContainer;
+import fr.cashmanager.logging.Logger;
+import fr.cashmanager.logging.LoggerFactory;
 import fr.cashmanager.rpc.commands.JsonRpcCommandManager;
+import fr.cashmanager.rpc.exception.JsonRpcException;
+import fr.cashmanager.rpc.exception.StandardJsonRpcErrorCode;
+import fr.cashmanager.rpc.helpers.JsonRpcHelper;
+import fr.cashmanager.rpc.middlewares.JsonRpcMiddleware;
 
 /**
  * JsonRpcClientHandler
  */
 public class JsonRpcClientHandler extends ClientHandler {
 
-    private JsonRpcCommandManager commandManager;
+    private ServicesContainer services;
+    private Logger log;
 
     /**
      * default constructor
      * @param commandManager the command manager
      * @param socket the client socket
      */
-    JsonRpcClientHandler(JsonRpcCommandManager commandManager, Socket socket) {
+    JsonRpcClientHandler(ServicesContainer services, Socket socket) {
         super(socket);
-        this.commandManager = commandManager;
+        this.services = services;
+        this.log = services.get(LoggerFactory.class).getLogger("JsonRpcClientHandler");
     }
 
     /**
@@ -41,113 +51,43 @@ public class JsonRpcClientHandler extends ClientHandler {
      */
     @Override
     public void handleClient(InputStream is, OutputStream os) throws Exception {
+        log.info("Client connected");
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         OutputStreamWriter writer = new OutputStreamWriter(os, StandardCharsets.UTF_8);
         ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
+        Map<String, String> sessionData = new HashMap<String, String>();
+        String bodyAsString = "";
         do {
-            try {
-                String commandAsString = reader.readLine();
-                if (commandAsString == null) {
-                    continue;
-                }
-                JsonNode command = mapper.readTree(commandAsString);
-                JsonNode commandResult = parseAndExecuteCommand(command);
-                JsonNode clientResult = formatClientResult(getId(command), commandResult);
-                String clientResultAsString = mapper.writeValueAsString(clientResult);
-                writer.write(clientResultAsString);
-                writer.write("\n");
-                writer.flush();
-            } catch (SocketException e) {
-                // client disconected so do not write the error to the client
-            } catch (Exception e) {
-                e.printStackTrace();
-                JsonNode clientErrorJsonNode = formatClientError(e);
-                writer.write(mapper.writeValueAsString(clientErrorJsonNode) + "\n");
-                writer.flush();
+            bodyAsString = reader.readLine();
+            if (bodyAsString == null) {
+                continue;
             }
-        } while(this.getSocket().isConnected() == true);
+            JsonNode commandResult;
+            try {
+                JsonNode body = mapper.readTree(bodyAsString);
+                commandResult = executeMiddlewareChain(sessionData, body);
+            } catch (JsonParseException e) {
+                commandResult = JsonRpcHelper.formatClientError(null,
+                    new JsonRpcException(StandardJsonRpcErrorCode.INVALID_REQUEST));
+            }
+            String commandResultAsString = mapper.writeValueAsString(commandResult);
+            writer.write(commandResultAsString);
+            writer.write("\n");
+            writer.flush();
+        } while(bodyAsString != null);
+        log.info("Client disconected");
     }
 
-    /**
-     * private implementation where we parse and execute a command
-     * @param tree the parsed json object
-     * @return the result jsonNode
-     * @throws Exception if an exception occur durring the process
-     */
-    private JsonNode parseAndExecuteCommand(JsonNode tree) throws Exception {
-        ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
-        String method = getMethod(tree);
-        if (method == null) {
-            throw new Exception("no method for command [" + mapper.writeValueAsString(tree) + "]");
+    private JsonNode executeMiddlewareChain(Map<String, String> sessionData, JsonNode body) {
+        Queue<JsonRpcMiddleware> chain = services.get(JsonRpcCommandManager.class).getMiddlewareQueue();
+        JsonRpcMiddleware first = chain.poll();
+        try {
+            return first.run(chain, sessionData, body);
+        } catch (JsonRpcException e) {
+            String message = "Strange a JsonRpcException was returned by the command chain. did you forget the ErrorMiddleware ?";
+            log.error(message, e);
+            throw new RuntimeException(message);
         }
-        IJsonRpcCommand command = commandManager.getCommandForMethod(method).newInstance();
-        if (command == null) {
-            throw new Exception("no command for method [" + method + "]");
-        }
-        JsonNode params = getParams(tree);
-        if (params == null) {
-            throw new Exception("no params in command [" + mapper.writeValueAsString(tree) + "]");
-        }
-        command.parseParams(params); // throws an exception in case of an error
-        return command.execute(); // throws an exception in case of an error
     }
 
-    /**
-     * format the result to a JSON-RPC result
-     * @param id the id of the command
-     * @param commandResult the result of the command
-     * @return the formated JSON Object
-     */
-    private JsonNode formatClientResult(int id, JsonNode commandResult) {
-        ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
-        ObjectNode result = mapper.createObjectNode();
-        result.put("jsonrpc", "2.0");
-        result.put("id", id);
-        result.set("result", commandResult);
-        return result;
-    }
-
-    /**
-     * format the error to a JSON-RPC error
-     * @param e the exception
-     * @return the formated JSON Object
-     */
-    private JsonNode formatClientError(Exception e) {
-        ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
-        ObjectNode errorNode = mapper.createObjectNode();
-        errorNode.put("code", -42);
-        errorNode.put("message", e.getMessage());
-        ObjectNode result = mapper.createObjectNode();
-        result.put("jsonrpc", "2.0");
-        result.set("id", mapper.nullNode());
-        result.set("error", errorNode);
-        return result;
-    }
-
-    /**
-     * helper to get the method in the JSON-RPC request
-     * @param command
-     * @return the the method string
-     */
-    private String getMethod(JsonNode command) {
-        return command.path("method").asText();
-    }
-
-    /**
-     * helper to get the params in the JSON-RPC request
-     * @param command
-     * @return the the params jsonNode
-     */
-    private JsonNode getParams(JsonNode command) {
-        return command.get("params");
-    }
-
-    /**
-     * helper to get the id in the JSON-RPC request
-     * @param command
-     * @return the the id
-     */
-    private int getId(JsonNode command) {
-        return command.path("id").asInt();
-    }
 }

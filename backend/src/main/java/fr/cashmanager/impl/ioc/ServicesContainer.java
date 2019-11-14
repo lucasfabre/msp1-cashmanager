@@ -46,6 +46,9 @@ public class ServicesContainer {
             value = factory.instanciate();
         }
         result = clazz.cast(value);
+        if (result == null) {
+            throw new RuntimeException("The service " + clazz.getName() + " is not registered");
+        }
         return result;
     }
 }

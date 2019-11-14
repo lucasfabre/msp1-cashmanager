@@ -15,6 +15,8 @@ import org.junit.Test;
 import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.Preference;
 import fr.cashmanager.impl.ioc.ServicesContainer;
+import fr.cashmanager.logging.LoggerFactory;
+import fr.cashmanager.logging.LoggerService;
 import fr.cashmanager.rpc.clienthandler.ClientHandler;
 import fr.cashmanager.rpc.clienthandler.ClientHandlerFactory;
 import fr.cashmanager.rpc.server.IServer;
@@ -49,7 +51,7 @@ public class SocketServerTests extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        ServicesContainer container = new ServicesContainer();
+        ServicesContainer services = new ServicesContainer();
         // IConfig
         this.config = new IConfig() {
             Map<String, String> preference = new HashMap<String, String>();
@@ -64,7 +66,12 @@ public class SocketServerTests extends TestCase {
                 preference.put(Preference.SERVER_PORT.getName(), Integer.valueOf(SERVER_PORT).toString());
             }
         };
-        container.register(IConfig.class, this.config);
+        services.register(IConfig.class, this.config);
+        // Logging
+        LoggerService loggerService = new LoggerService(services);
+        services.register(LoggerService.class, loggerService);
+        LoggerFactory loggerFactory = new LoggerFactory(services);
+        services.register(LoggerFactory.class, loggerFactory);
         // ClientHandlerFactory
         this.clientHandlerFactory = new ClientHandlerFactory() {
             @Override
@@ -72,10 +79,10 @@ public class SocketServerTests extends TestCase {
                 return new SimpleSocketTestClient(socket);
             }
         };
-        container.register(ClientHandlerFactory.class, this.clientHandlerFactory);
+        services.register(ClientHandlerFactory.class, this.clientHandlerFactory);
         // IServer
-        server = new SocketServer(container);
-        container.register(IServer.class, server);
+        server = new SocketServer(services);
+        services.register(IServer.class, server);
         // Init
         this.config.configure();
     }
