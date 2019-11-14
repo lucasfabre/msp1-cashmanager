@@ -1,5 +1,6 @@
 package com.epitech.cashmanager.network
 
+import com.epitech.cashmanager.exceptions.ResponseRCPException
 import com.epitech.cashmanager.tools.Config
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -44,7 +45,7 @@ class SocketInstance {
     /**
      * sendRCPFormatData
      *
-     * This method is use for send a RCP format datas
+     * This method is use for serialize and send a RCP format datas
      *
      * @param String method represent the name of method
      * @param JSONObject params represent the list of params datas
@@ -67,8 +68,18 @@ class SocketInstance {
      * This method is use for deserialize string response to an JSONObject RCP format response
      */
 
-    fun getJSONRCPObect(json: String): JSONObject {
-        val deserializedJSON = mapper.readValue<JSONObject>(json)
+    fun getJsonRcpObject(): JSONObject {
+        val deserializedJSON = mapper.readValue<JSONObject>(`in`!!.readLine())
+        try {
+            deserializedJSON.getJSONObject("method")
+            if (deserializedJSON.has("error")) {
+                var code: String = deserializedJSON.getJSONObject("error").getString("code")
+                var message: String = deserializedJSON.getJSONObject("error").getString("message")
+                throw ResponseRCPException("Code: " + code + ", Message: " + message)
+            }
+        } catch (e: ResponseRCPException) {
+            e.printStackTrace()
+        }
         return deserializedJSON
     }
 

@@ -50,6 +50,7 @@ class ServerSettingsFragment : Fragment()  {
             params.put("password", "dupond")
             socket.start()
             socket.sendRCPFormatData("login", params, 1)
+            println(socket.getJsonRcpObject())
             socket.stop()
         }
 
