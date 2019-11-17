@@ -78,7 +78,7 @@ public class JsonRpcHelper {
         ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
         ObjectNode result = mapper.createObjectNode();
         result.put("jsonrpc", "2.0");
-        if (id == null) {
+        if (id != null) {
             result.put("id", id);
         }
         result.set("result", commandResult);
