@@ -15,6 +15,7 @@ import com.epitech.cashmanager.tools.ManagePermissions
 import io.paperdb.Paper
 import kotlinx.android.synthetic.main.fragment_home.*
 import android.os.StrictMode
+import androidx.appcompat.app.ActionBar
 import com.epitech.cashmanager.R
 
 
@@ -36,6 +37,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Paper.init(this)
         setContentView(R.layout.fragment_home)
+        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar?.setDisplayShowCustomEnabled(true)
+        supportActionBar?.setCustomView(R.layout.custom_action_bar)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration(
@@ -55,6 +59,7 @@ class MainActivity : AppCompatActivity() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             managePermissions.checkPermissions()
+
         showCart.setOnClickListener {
             val intent = Intent(this, ShoppingCartActivity::class.java)
             startActivity(intent)

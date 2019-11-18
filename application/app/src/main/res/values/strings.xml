@@ -16,4 +16,7 @@
     <string name="paiement_qrcode">QrCode payment</string>
     <string name="CB">Place your card under device</string>
     <string name="send_bill">Send a bill</string>
+    <string name="network">Network</string>
+    <string name="server">Server</string>
+    <string name="disconnected">Disconnected</string>
 </resources>
