@@ -12,6 +12,9 @@ import androidx.lifecycle.ViewModelProviders
 import com.epitech.cashmanager.R
 import com.epitech.cashmanager.models.ServerSettingsViewModel
 import com.epitech.cashmanager.network.SocketInstance
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.json.JSONObject
 
 /**
@@ -27,6 +30,7 @@ class ServerSettingsFragment : Fragment()  {
 
     private lateinit var settingsViewModel: ServerSettingsViewModel
     private var socket: SocketInstance = SocketInstance()
+    private val mapper = ObjectMapper().registerModule(KotlinModule())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,13 +49,12 @@ class ServerSettingsFragment : Fragment()  {
         btnConnexion.text = "Connexion"
         btnConnexion.setOnClickListener {
             btnConnexion.isEnabled = false
-            var params: JSONObject = JSONObject()
-            params.put("login", "jean")
-            params.put("password", "dupond")
+            var params: ObjectNode = mapper.createObjectNode()
+            params.put("accountId", "acc1")
             socket.start()
-            socket.sendRCPFormatData("login", params, 1)
+            socket.sendRCPFormatData("DescribeAccount", params, 1)
             println(socket.getJsonRcpObject())
-            socket.stop()
+            println(socket.isConnected())
         }
 
         return root

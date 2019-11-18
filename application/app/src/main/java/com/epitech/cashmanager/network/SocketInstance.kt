@@ -3,11 +3,12 @@ package com.epitech.cashmanager.network
 import com.epitech.cashmanager.exceptions.ResponseRCPException
 import com.epitech.cashmanager.tools.Config
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.json.JSONObject
 import java.net.*
 import java.io.*
+import java.lang.Exception
 
 /**
  * Socket Instance
@@ -52,14 +53,15 @@ class SocketInstance {
      * @param Int id represent unique identifier
      */
 
-    fun sendRCPFormatData(method: String, params: JSONObject, id: Int) {
-        var json: JSONObject = JSONObject()
+    fun sendRCPFormatData(method: String, params: ObjectNode, id: Int) {
+        var json: ObjectNode = mapper.createObjectNode()
         json.put("jsonrpc", "2.0")
         json.put("method", method)
         json.put("params", params)
         json.put("id", id)
         val serializedJSON = mapper.writeValueAsString(json)
         out!!.write(serializedJSON)
+        out!!.flush()
     }
 
     /**
@@ -68,16 +70,21 @@ class SocketInstance {
      * This method is use for deserialize string response to an JSONObject RCP format response
      */
 
-    fun getJsonRcpObject(): JSONObject {
-        val deserializedJSON = mapper.readValue<JSONObject>(`in`!!.readLine())
+    fun getJsonRcpObject(): ObjectNode {
+        val deserializedJSON: ObjectNode = mapper.createObjectNode()
         try {
-            deserializedJSON.getJSONObject("method")
+            var line: String? = `in`!!.readLine()
+            if (line == null) {
+                throw Exception()
+            }
+            val deserializedJSON = mapper.readValue<ObjectNode>(line)
+            deserializedJSON.get("method")
             if (deserializedJSON.has("error")) {
-                var code: String = deserializedJSON.getJSONObject("error").getString("code")
-                var message: String = deserializedJSON.getJSONObject("error").getString("message")
+                var code: String = deserializedJSON.get("error").asText("code")
+                var message: String = deserializedJSON.get("error").asText("message")
                 throw ResponseRCPException("Code: " + code + ", Message: " + message)
             }
-        } catch (e: ResponseRCPException) {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
         return deserializedJSON
@@ -93,5 +100,9 @@ class SocketInstance {
         `in`!!.close()
         out!!.close()
         clientSocket!!.close()
+    }
+
+    fun isConnected(): Boolean {
+        return clientSocket!!.isConnected()
     }
 }

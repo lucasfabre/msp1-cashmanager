@@ -11,7 +11,7 @@ package com.epitech.cashmanager.tools
 
 class Config {
 
-    var ip: String = "127.0.0.1"
-    var port: Int = 6666
+    var ip: String = "10.0.2.2"
+    var port: Int = 8080
 
 }
