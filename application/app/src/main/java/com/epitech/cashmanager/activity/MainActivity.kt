@@ -15,9 +15,11 @@ import com.epitech.cashmanager.tools.ManagePermissions
 import io.paperdb.Paper
 import kotlinx.android.synthetic.main.fragment_home.*
 import android.os.StrictMode
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.ActionBar
 import com.epitech.cashmanager.R
-
 
 /**
  * MainActivity
@@ -28,10 +30,36 @@ import com.epitech.cashmanager.R
  * @property managePermissions the managePermissions permit to manage all android permissions access
  */
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnTouchListener{
 
     private val PermissionsRequestCode = 123
     private lateinit var managePermissions: ManagePermissions
+    var _root: ViewGroup? = null
+    var dX:Float = 0.toFloat()
+    var dY:Float = 0.toFloat()
+
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        when (event?.getAction()) {
+            MotionEvent.ACTION_DOWN -> {
+
+                dX = v?.getX()!! - event.getRawX()
+                dY = v?.getY()!! - event.getRawY()
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+
+                v?.animate()?.x(event.getRawX() + dX)?.y(event.getRawY() + dY)?.setDuration(0)
+                    ?.start()
+            }
+
+            MotionEvent.ACTION_UP -> {
+                val intent = Intent(this, ShoppingCartActivity::class.java)
+                startActivity(intent)
+            }
+            else -> return false
+        }
+        return true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +78,11 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        /*showCart.setOnClickListener {
+            val intent = Intent(this, ShoppingCartActivity::class.java)
+            startActivity(intent)
+        }*/
+        showCart.setOnTouchListener(this)
         cart_size.text = ShoppingCartService.getShoppingCartSize().toString()
         val list = listOf<String>(
             Manifest.permission.CAMERA,
@@ -59,12 +92,6 @@ class MainActivity : AppCompatActivity() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             managePermissions.checkPermissions()
-
-        showCart.setOnClickListener {
-            val intent = Intent(this, ShoppingCartActivity::class.java)
-            startActivity(intent)
-        }
-
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
     }

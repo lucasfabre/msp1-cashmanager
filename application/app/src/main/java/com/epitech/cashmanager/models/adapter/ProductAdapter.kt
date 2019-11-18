@@ -13,6 +13,7 @@ import com.epitech.cashmanager.services.ShoppingCartService
 import com.epitech.cashmanager.beans.CartItem
 import com.epitech.cashmanager.beans.Product
 import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.Picasso
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -53,15 +54,13 @@ class ProductAdapter(var context: Context, var products: List<Product> = arrayLi
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         @SuppressLint("CheckResult", "SetTextI18n")
         fun bindProduct(product: Product) {
-            val nonNullableInt: Int = product.photos!!
+            //val nonNullableInt: Int = product.photos!!
             itemView.product_name.text = product.name
             itemView.product_price.text = "$${product.price.toString()}"
-            if (nonNullableInt > 1) {
-                itemView.product_image.setImageResource(nonNullableInt)
-            }
-
+            Picasso.get().load(product.photos).into(itemView.product_image)
+            //itemView.product_image.setImageBitmap(product.photos)
             Observable.create(ObservableOnSubscribe<MutableList<CartItem>> {
-                itemView.addToCart.setOnClickListener { view ->
+                itemView.addToCart.setOnClickListener { _ ->
 
                     val item = CartItem(product)
 
@@ -74,7 +73,7 @@ class ProductAdapter(var context: Context, var products: List<Product> = arrayLi
                     ).show()
                     it.onNext(ShoppingCartService.getCart())
                 }
-                itemView.removeItem.setOnClickListener { view ->
+                itemView.removeItem.setOnClickListener { _ ->
                     val item = CartItem(product)
                     ShoppingCartService.removeItem(item, itemView.context)
                     Snackbar.make(

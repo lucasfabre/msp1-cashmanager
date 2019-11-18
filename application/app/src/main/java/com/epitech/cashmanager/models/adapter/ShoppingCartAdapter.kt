@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.epitech.cashmanager.R
 import com.epitech.cashmanager.beans.CartItem
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.adapter_cart_list_item.view.*
 
 /**
@@ -44,8 +45,8 @@ class ShoppingCartAdapter(var context: Context, var cartItems: List<CartItem>) :
         @SuppressLint("SetTextI18n")
         fun bindItem(cartItem: CartItem) {
             if(cartItem.quantity > 0) {
-                val nonNullableInt: Int = cartItem.product.photos!!
-                itemView.product_image.setImageResource(nonNullableInt)
+                //itemView.product_image.setImageBitmap(cartItem.product.photos)
+                Picasso.get().load(cartItem.product.photos).into(itemView.product_image)
                 itemView.product_name.text = cartItem.product.name
                 itemView.product_price.text = "$${cartItem.product.price}"
                 itemView.product_quantity.text = cartItem.quantity.toString()
