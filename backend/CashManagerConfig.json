@@ -1,11 +1,14 @@
 {
     "accounts": [
-        { "id": "acc1", "balance": 12.04 }
+        { "id": "acc1", "balance": 12.04 },
+        { "id": "acc2", "balance": 30.00 }
     ],
     "users": [
         { "id": "user1", "password": "p1" }
     ],
     "preferences": {
-        "server.port": "8080"
+        "server.port": "8080",
+        "transactions.maxdelay": "5",
+        "transactions.maxretry": "2"
     }
 }

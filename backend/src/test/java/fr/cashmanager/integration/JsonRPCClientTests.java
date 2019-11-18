@@ -59,7 +59,7 @@ public class JsonRPCClientTests extends IntegrationTestBase {
         }
 
         @Override
-        public JsonNode execute() throws JsonRpcException {
+        public JsonNode execute(Map<String, Object> session) throws JsonRpcException {
             ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
             Integer result = params.stream().reduce((a, b) -> a - b).get();
             ObjectNode commandResult = mapper.createObjectNode();
@@ -102,7 +102,7 @@ public class JsonRPCClientTests extends IntegrationTestBase {
         // JsonRpcCommandManager
         JsonRpcCommandManager jsonRpcCommandManager = new JsonRpcCommandManager();
         jsonRpcCommandManager.registerCommand(new SubstractCommand());
-        jsonRpcCommandManager.registerMiddleware(new ErrorMiddleware());
+        jsonRpcCommandManager.registerMiddleware(new ErrorMiddleware(services));
         jsonRpcCommandManager.registerMiddleware(new CommandMiddleware(services));
         services.register(JsonRpcCommandManager.class, jsonRpcCommandManager);
         // ClientHandlerFactory

@@ -1,5 +1,6 @@
 package fr.cashmanager.command;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -51,7 +52,7 @@ public class CommandDescribeAccount implements IJsonRpcCommand {
      * Execute the command
      */
     @Override
-    public JsonNode execute() throws JsonRpcException {
+    public JsonNode execute(Map<String, Object> session) throws JsonRpcException {
         BankAccountManagementService bankAccountManagementService = services.get(BankAccountManagementService.class);
         Account account;
         try {

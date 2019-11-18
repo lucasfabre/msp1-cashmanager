@@ -7,7 +7,11 @@ import org.junit.Test;
 
 import fr.cashmanager.accounts.BankAccountManagementService;
 import fr.cashmanager.accounts.InMemoryBankAccountManagementService;
+import fr.cashmanager.config.IConfig;
+import fr.cashmanager.config.LocalFileConfig;
 import fr.cashmanager.impl.ioc.ServicesContainer;
+import fr.cashmanager.logging.LoggerFactory;
+import fr.cashmanager.logging.LoggerService;
 
 /**
  * PaymentProcessingServiceTests
@@ -15,12 +19,21 @@ import fr.cashmanager.impl.ioc.ServicesContainer;
 public class PaymentProcessingServiceTests {
 
     private BankAccountManagementService bankAccountManagementService;
-    private ServicesContainer container = new ServicesContainer();
+    private ServicesContainer services = new ServicesContainer();
 
     @Before
     public void setUp() {
+        IConfig config = new LocalFileConfig(services);
+        services.register(IConfig.class, config);
+
+        LoggerService loggerService = new LoggerService(services);
+        services.register(LoggerService.class, loggerService);
+
+        LoggerFactory loggerFactory = new LoggerFactory(services);
+        services.register(LoggerFactory.class, loggerFactory);
+
         bankAccountManagementService = new InMemoryBankAccountManagementService();
-        container.register(BankAccountManagementService.class, bankAccountManagementService);
+        services.register(BankAccountManagementService.class, bankAccountManagementService);
     }
 
     /**
@@ -33,22 +46,13 @@ public class PaymentProcessingServiceTests {
         bankAccountManagementService.registerNewAcount("2", 90.0);
 
         // create the transaction
-        IPayment payment = new IPayment(){
-            public String getDebtor() {
-                return "1";
-            }
-        
-            public String getCreditor() {
-                return "2";
-            }
-        
-            public Double getAmount() {
-                return 20.0;
-            }
-        };
+        Payment payment = new Payment()
+            .withDebtor("1")
+            .withCreditor("2")
+            .withAmount(Double.valueOf(20.0));
 
         // process the transaction
-        PaymentProcessingService service = new PaymentProcessingService(container);
+        PaymentProcessingService service = new PaymentProcessingService(services);
         service.processTransaction(payment);
 
         // check the result
@@ -66,27 +70,21 @@ public class PaymentProcessingServiceTests {
         bankAccountManagementService.registerNewAcount("1", 120.0);
 
         // create the transaction
-        IPayment payment = new IPayment(){
-            public String getDebtor() {
-                return "1";
-            }
-        
-            public String getCreditor() {
-                return "2";
-            }
-        
-            public Double getAmount() {
-                return 20.0;
-            }
-        };
+        Payment payment = new Payment()
+            .withDebtor("1")
+            .withCreditor("2")
+            .withAmount(Double.valueOf(20.0));
+
 
         // process the transaction
-        PaymentProcessingService service = new PaymentProcessingService(container);
+        PaymentProcessingService service = new PaymentProcessingService(services);
+        services.get(LoggerService.class).disableLogs();
         try {
            service.processTransaction(payment);
         } catch (Exception e) {
             // fail silently
         }
+        services.get(LoggerService.class).enableLogs();
 
         // check the result
         assertEquals(Double.valueOf(120.0), bankAccountManagementService.getAccountBalance("1"));

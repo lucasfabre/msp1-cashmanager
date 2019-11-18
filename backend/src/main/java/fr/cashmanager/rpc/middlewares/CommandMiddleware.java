@@ -51,7 +51,7 @@ public class CommandMiddleware extends JsonRpcMiddleware {
             throw new JsonRpcException(JsonRpcErrorCode.INVALID_PARAMS);
         }
         command.parseParams(params); // throws an exception in case of an error
-        return command.execute(); // throws an exception in case of an error
+        return command.execute(session); // throws an exception in case of an error
     }
 
 }

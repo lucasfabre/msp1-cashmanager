@@ -19,6 +19,8 @@ import fr.cashmanager.testutils.TestHelper;
  */
 public abstract class ScenarioTestBase extends IntegrationTestBase {
 
+    protected MockedLocalFileConfig mockedLocalFileConfig;
+
     @Before
     @Override
     public void setUpAppContext() throws Exception {
@@ -29,7 +31,7 @@ public abstract class ScenarioTestBase extends IntegrationTestBase {
         // Init the app like in prod
         services = CashManager.initContainer();
         // Overide the IConfig
-        MockedLocalFileConfig mockedLocalFileConfig = new MockedLocalFileConfig(services);
+        mockedLocalFileConfig = new MockedLocalFileConfig(services);
         services.register(IConfig.class, mockedLocalFileConfig);
         // init the services
         CashManager.initServices(services);

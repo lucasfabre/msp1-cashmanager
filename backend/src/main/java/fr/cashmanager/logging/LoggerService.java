@@ -16,6 +16,7 @@ public class LoggerService {
     // we store this to use the IConfig service in the future
     @SuppressWarnings("unused")
     private ServicesContainer services;
+    private boolean logsDisabled = false;
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private Map<LogLevel, PrintStream> printStreamByLvl = new HashMap<LogLevel, PrintStream>();
@@ -40,9 +41,11 @@ public class LoggerService {
      * @param e an exception (can be null)
      */
     public synchronized void write(LogLevel lvl, String name, String msg, Exception e) {
-        printStreamByLvl.get(lvl).println(formatMessage(lvl, new Date(), name, msg));
-        if (e != null) {
-            e.printStackTrace(printStreamByLvl.get(lvl));
+        if (logsDisabled == false) {
+            printStreamByLvl.get(lvl).println(formatMessage(lvl, new Date(), name, msg));
+            if (e != null) {
+                e.printStackTrace(printStreamByLvl.get(lvl));
+            }
         }
     }
 
@@ -51,5 +54,13 @@ public class LoggerService {
      */
     private String formatMessage(LogLevel lvl, Date date, String name, String msg) {
         return sdf.format(date) + " [" +  lvl.name() + "] - " + name + ": " + msg;
+    }
+
+    public void disableLogs() {
+        this.logsDisabled = true;
+    }
+
+    public void enableLogs() {
+        this.logsDisabled = false;
     }
 }

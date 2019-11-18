@@ -1,5 +1,6 @@
 package fr.cashmanager.rpc.commands;
 
+import java.util.Map;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import fr.cashmanager.rpc.exception.JsonRpcException;
@@ -25,9 +26,10 @@ public interface IJsonRpcCommand {
     /**
      * Execute the command
      * @return the result jsonNode
+     * @param session the connection session
      * @throws Exception an exception in case of an error
      */
-    public JsonNode execute() throws JsonRpcException;
+    public JsonNode execute(Map<String, Object> session) throws JsonRpcException;
 
     /**
      * factory method
