@@ -3,6 +3,7 @@ package com.epitech.cashmanager.activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -53,4 +54,10 @@ class ShoppingCartActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    fun deleteAll(view: View) {
+        ShoppingCartService.ClearCart()
+        adapter = ShoppingCartAdapter(this, ShoppingCartService.getCart())
+        adapter.notifyDataSetChanged()
+        setContentView(R.layout.activity_shopping_cart)
+    }
 }

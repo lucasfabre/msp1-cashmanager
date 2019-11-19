@@ -34,24 +34,20 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener{
 
     private val PermissionsRequestCode = 123
     private lateinit var managePermissions: ManagePermissions
-    var _root: ViewGroup? = null
     var dX:Float = 0.toFloat()
     var dY:Float = 0.toFloat()
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        when (event?.getAction()) {
+        when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
-
-                dX = v?.getX()!! - event.getRawX()
-                dY = v?.getY()!! - event.getRawY()
+                dX = v?.x!! - event.rawX
+                dY = v.y - event.rawY
             }
-
             MotionEvent.ACTION_MOVE -> {
 
-                v?.animate()?.x(event.getRawX() + dX)?.y(event.getRawY() + dY)?.setDuration(0)
+                v?.animate()?.x(event.rawX + dX)?.y(event.rawY + dY)?.setDuration(0)
                     ?.start()
             }
-
             MotionEvent.ACTION_UP -> {
                 val intent = Intent(this, ShoppingCartActivity::class.java)
                 startActivity(intent)
@@ -105,7 +101,6 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener{
      * @param Array<String> tab of permissions
      * @param IntArray tab of int grantResults
      */
-
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>,
         grantResults: IntArray

@@ -9,6 +9,7 @@
         tools:context=".activity.ShoppingCartActivity">
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="wrap_content"
         android:layout_height="535dp">
 
@@ -19,7 +20,10 @@
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -75,5 +79,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/deleteAllItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="deleteAll"
+        android:src="@drawable/ic_delete_forever_black_24dp"
+        android:tint="@android:color/background_light"
+        app:fabSize="normal"
+        app:layout_anchor="@+id/relativeLayout"
+        app:layout_anchorGravity="end|bottom"
+        tools:layout_toEndOf="@id/shopping_cart_recyclerView" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
