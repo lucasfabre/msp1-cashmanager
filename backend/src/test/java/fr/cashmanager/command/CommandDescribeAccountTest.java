@@ -1,5 +1,7 @@
 package fr.cashmanager.command;
 
+import java.util.HashMap;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -49,7 +51,7 @@ public class CommandDescribeAccountTest extends TestCase {
         JsonNode params = mapper.readTree("{\"accountId\": \"acc1\"}");
         IJsonRpcCommand cmd = describeAccountCommand.newInstance();
         cmd.parseParams(params);
-        JsonNode res = cmd.execute();
+        JsonNode res = cmd.execute(new HashMap<String, Object>());
         Account acc = mapper.treeToValue(res, Account.class);
         assertEquals(Double.valueOf(12), Double.valueOf(acc.getBalance()));
         assertEquals("acc1", acc.getId());

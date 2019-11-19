@@ -3,6 +3,8 @@ package fr.cashmanager;
 import fr.cashmanager.accounts.BankAccountManagementService;
 import fr.cashmanager.accounts.InMemoryBankAccountManagementService;
 import fr.cashmanager.command.CommandDescribeAccount;
+import fr.cashmanager.command.CommandStartTransaction;
+import fr.cashmanager.command.CommandValidateAndProcessTransaction;
 import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.LocalFileConfig;
 import fr.cashmanager.impl.ioc.ServicesContainer;
@@ -12,6 +14,7 @@ import fr.cashmanager.payment.PaymentProcessingService;
 import fr.cashmanager.rpc.clienthandler.ClientHandlerFactory;
 import fr.cashmanager.rpc.clienthandler.JsonRpcClientHandlerFactory;
 import fr.cashmanager.rpc.commands.JsonRpcCommandManager;
+import fr.cashmanager.rpc.middlewares.AuthenticationMiddleware;
 import fr.cashmanager.rpc.middlewares.CommandMiddleware;
 import fr.cashmanager.rpc.middlewares.ErrorMiddleware;
 import fr.cashmanager.rpc.server.IServer;
@@ -57,8 +60,11 @@ public class CashManager {
     public static void initCommandsAndMiddlewares(ServicesContainer services) throws Exception {
         JsonRpcCommandManager commandManager = services.get(JsonRpcCommandManager.class);
         commandManager.registerCommand(new CommandDescribeAccount(services));
+        commandManager.registerCommand(new CommandStartTransaction(services));
+        commandManager.registerCommand(new CommandValidateAndProcessTransaction(services));
 
-        commandManager.registerMiddleware(new ErrorMiddleware());
+        commandManager.registerMiddleware(new ErrorMiddleware(services));
+        commandManager.registerMiddleware(new AuthenticationMiddleware(services));
         commandManager.registerMiddleware(new CommandMiddleware(services));
     }
 

@@ -26,7 +26,7 @@ import fr.cashmanager.rpc.clienthandler.JsonRpcClientHandlerFactory;
 import fr.cashmanager.rpc.commands.IJsonRpcCommand;
 import fr.cashmanager.rpc.commands.JsonRpcCommandManager;
 import fr.cashmanager.rpc.exception.JsonRpcException;
-import fr.cashmanager.rpc.exception.StandardJsonRpcErrorCode;
+import fr.cashmanager.rpc.exception.JsonRpcErrorCode;
 import fr.cashmanager.rpc.middlewares.CommandMiddleware;
 import fr.cashmanager.rpc.middlewares.ErrorMiddleware;
 import fr.cashmanager.rpc.server.IServer;
@@ -49,7 +49,7 @@ public class JsonRPCClientTests extends IntegrationTestBase {
             try {
                 this.params = mapper.readValue(mapper.treeAsTokens(params), jt);
             } catch (IOException e) {
-                throw new JsonRpcException(StandardJsonRpcErrorCode.INVALID_PARAMS);
+                throw new JsonRpcException(JsonRpcErrorCode.INVALID_PARAMS);
 			}
         }
 
@@ -59,7 +59,7 @@ public class JsonRPCClientTests extends IntegrationTestBase {
         }
 
         @Override
-        public JsonNode execute() throws JsonRpcException {
+        public JsonNode execute(Map<String, Object> session) throws JsonRpcException {
             ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
             Integer result = params.stream().reduce((a, b) -> a - b).get();
             ObjectNode commandResult = mapper.createObjectNode();
@@ -102,7 +102,7 @@ public class JsonRPCClientTests extends IntegrationTestBase {
         // JsonRpcCommandManager
         JsonRpcCommandManager jsonRpcCommandManager = new JsonRpcCommandManager();
         jsonRpcCommandManager.registerCommand(new SubstractCommand());
-        jsonRpcCommandManager.registerMiddleware(new ErrorMiddleware());
+        jsonRpcCommandManager.registerMiddleware(new ErrorMiddleware(services));
         jsonRpcCommandManager.registerMiddleware(new CommandMiddleware(services));
         services.register(JsonRpcCommandManager.class, jsonRpcCommandManager);
         // ClientHandlerFactory

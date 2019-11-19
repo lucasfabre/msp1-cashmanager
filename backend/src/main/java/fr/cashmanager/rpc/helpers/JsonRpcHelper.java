@@ -40,6 +40,16 @@ public class JsonRpcHelper {
     }
 
     /**
+     * helper to get the id in the JSON-RPC request
+     * @param command
+     * @return the the id or null
+     */
+    public static Integer getIdOrNull(JsonNode command) {
+        int id = command.path("id").asInt();
+        return (id != 0) ? Integer.valueOf(id) : null;
+    }
+
+    /**
      * format the error to a JSON-RPC error
      * @param e the exception
      * @return the formated JSON Object
@@ -55,6 +65,23 @@ public class JsonRpcHelper {
             result.put("id", id);
         }
         result.set("error", errorNode);
+        return result;
+    }
+
+    /**
+     * format the result to a JSON-RPC result
+     * @param id the id of the command
+     * @param commandResult the result of the command
+     * @return the formated JSON Object
+     */
+    public static JsonNode formatClientResult(Integer id, JsonNode commandResult) {
+        ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
+        ObjectNode result = mapper.createObjectNode();
+        result.put("jsonrpc", "2.0");
+        if (id != null) {
+            result.put("id", id);
+        }
+        result.set("result", commandResult);
         return result;
     }
 }

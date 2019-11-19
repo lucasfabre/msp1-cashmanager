@@ -21,6 +21,16 @@ public class ServicesContainerTests extends TestCase {
         assertTrue(instance == instanceFromContainer);
     }
 
+    public void testSimpleNotFound() {
+        ServicesContainer container = new ServicesContainer();
+        try {
+            container.get(Integer.class);
+            assertTrue("the container does not throw a RuntimeException", false);
+        } catch (RuntimeException e) {
+            assertEquals("The service java.lang.Integer is not registered", e.getMessage());
+        }
+    }
+
     public void testSimpleFactory() {
         final StringBuilder value = new StringBuilder("il etait une fois...");
 
