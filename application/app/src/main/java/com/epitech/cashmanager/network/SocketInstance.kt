@@ -60,7 +60,7 @@ class SocketInstance {
         json.put("params", params)
         json.put("id", id)
         val serializedJSON = mapper.writeValueAsString(json)
-        out!!.write(serializedJSON)
+        out!!.write(serializedJSON + "\n")
         out!!.flush()
     }
 
