@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import com.epitech.cashmanager.R
 import com.epitech.cashmanager.models.adapter.ShoppingCartAdapter
 import com.epitech.cashmanager.services.ShoppingCartService
@@ -33,6 +34,15 @@ class PaymentActivity : AppCompatActivity() {
             .fold(0.toDouble()) { acc, cartItem -> acc + cartItem.quantity.times(cartItem.product.price!!.toDouble()) }
         total_price.text = "${totalPrice}€"
 
+        val nfcIntent: Button = findViewById(R.id.nfc)
+        nfcIntent.setOnClickListener {
+            goToNFC(it)
+        }
+
+        val qrCodeIntent: Button = findViewById(R.id.qrCode)
+        qrCodeIntent.setOnClickListener {
+            goToQrCode(it)
+        }
     }
 
     /**
@@ -50,14 +60,14 @@ class PaymentActivity : AppCompatActivity() {
     }
 
     /**
-     * goToQr
+     * goToQrCode
      *
      * This method called an intent for will launch QR Code
      *
      * @param View view represent currentView
      */
 
-    fun goToQr(view: View) {
+    fun goToQrCode(view: View) {
         val intent = Intent(this, ScanActivity::class.java)
         //finish() //close current activity
         startActivity(intent)
