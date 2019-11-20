@@ -9,11 +9,12 @@ import fr.cashmanager.rpc.exception.JsonRpcException;
 
 /**
  * JsonRpcMiddleware
+ * base class for any JsonRpcMiddleware 
  */
 public abstract class JsonRpcMiddleware {
 
     protected Queue<JsonRpcMiddleware> queue;
-    protected Map<String, String> session;
+    protected Map<String, Object> session;
     protected JsonNode body;
 
     /**
@@ -31,7 +32,7 @@ public abstract class JsonRpcMiddleware {
      * @return the response
      * @throws JsonRpcException
      */
-    public JsonNode run(Queue<JsonRpcMiddleware> queue, Map<String, String> session, JsonNode body) throws JsonRpcException {
+    public JsonNode run(Queue<JsonRpcMiddleware> queue, Map<String, Object> session, JsonNode body) throws JsonRpcException {
         this.queue = queue;
         this.session = session;
         this.body = body;

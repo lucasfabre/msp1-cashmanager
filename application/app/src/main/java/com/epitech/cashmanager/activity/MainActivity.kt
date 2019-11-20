@@ -10,11 +10,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.epitech.cashmanager.R
 import com.epitech.cashmanager.services.ShoppingCartService
 import com.epitech.cashmanager.tools.ManagePermissions
 import io.paperdb.Paper
 import kotlinx.android.synthetic.main.fragment_home.*
+import android.os.StrictMode
+import com.epitech.cashmanager.R
+
 
 /**
  * MainActivity
@@ -57,6 +59,9 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ShoppingCartActivity::class.java)
             startActivity(intent)
         }
+
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
     }
 
     /**

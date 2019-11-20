@@ -1,5 +1,6 @@
 package fr.cashmanager.accounts;
 
+import java.security.InvalidParameterException;
 import java.util.NoSuchElementException;
 
 /**
@@ -39,10 +40,13 @@ public abstract class BankAccountManagementService {
      * @param accoundId the account id
      * @param amount the amount to debit
      */
-    public void debitAccount(String accoundId, Double amount) throws NoSuchElementException {
+    public void debitAccount(String accoundId, Double amount) throws InvalidParameterException, NoSuchElementException {
         Account account = this.getAccountForId(accoundId);
         Double balance = account.getBalance();
         balance = balance - amount;
+        if (balance < 0) {
+            throw new InvalidParameterException("Not enough money on account: " + account.getId());
+        }
         account.setBalance(balance);
         this.saveAccount(account);
     }

@@ -21,7 +21,7 @@ import fr.cashmanager.logging.Logger;
 import fr.cashmanager.logging.LoggerFactory;
 import fr.cashmanager.rpc.commands.JsonRpcCommandManager;
 import fr.cashmanager.rpc.exception.JsonRpcException;
-import fr.cashmanager.rpc.exception.StandardJsonRpcErrorCode;
+import fr.cashmanager.rpc.exception.JsonRpcErrorCode;
 import fr.cashmanager.rpc.helpers.JsonRpcHelper;
 import fr.cashmanager.rpc.middlewares.JsonRpcMiddleware;
 
@@ -55,7 +55,7 @@ public class JsonRpcClientHandler extends ClientHandler {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         OutputStreamWriter writer = new OutputStreamWriter(os, StandardCharsets.UTF_8);
         ObjectMapper mapper = JsonMapperFactory.getObjectMapper();
-        Map<String, String> sessionData = new HashMap<String, String>();
+        Map<String, Object> sessionData = new HashMap<String, Object>();
         String bodyAsString = "";
         do {
             bodyAsString = reader.readLine();
@@ -68,7 +68,7 @@ public class JsonRpcClientHandler extends ClientHandler {
                 commandResult = executeMiddlewareChain(sessionData, body);
             } catch (JsonParseException e) {
                 commandResult = JsonRpcHelper.formatClientError(null,
-                    new JsonRpcException(StandardJsonRpcErrorCode.INVALID_REQUEST));
+                    new JsonRpcException(JsonRpcErrorCode.INVALID_REQUEST));
             }
             String commandResultAsString = mapper.writeValueAsString(commandResult);
             writer.write(commandResultAsString);
@@ -78,7 +78,7 @@ public class JsonRpcClientHandler extends ClientHandler {
         log.info("Client disconected");
     }
 
-    private JsonNode executeMiddlewareChain(Map<String, String> sessionData, JsonNode body) {
+    private JsonNode executeMiddlewareChain(Map<String, Object> sessionData, JsonNode body) {
         Queue<JsonRpcMiddleware> chain = services.get(JsonRpcCommandManager.class).getMiddlewareQueue();
         JsonRpcMiddleware first = chain.poll();
         try {

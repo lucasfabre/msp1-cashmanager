@@ -5,7 +5,9 @@ package fr.cashmanager.config;
  */
 public enum Preference {
 
-    SERVER_PORT("server.port", "8080");
+    SERVER_PORT("server.port", "8080"),
+    MAX_TRANSACTION_DELAY("transactions.maxdelay", "30"),
+    MAX_TRANSACTION_RETRY("transactions.maxretry", "2");
 
     private String name;
     private String defaultValue;
