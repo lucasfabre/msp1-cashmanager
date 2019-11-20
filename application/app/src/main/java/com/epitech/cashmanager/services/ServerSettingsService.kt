@@ -1,5 +1,8 @@
 package com.epitech.cashmanager.services
 
+import android.view.View
+import android.widget.Toast
+
 /**
  * Server settings service
  *
@@ -7,7 +10,9 @@ package com.epitech.cashmanager.services
  */
 
 class ServerSettingsService {
-    /**
-     * Future JSON-RCP implementation
-     */
+
+    fun saveData(view: View) {
+        Toast.makeText(view.context, "Your datas as been saved", Toast.LENGTH_SHORT).show()
+    }
+
 }
