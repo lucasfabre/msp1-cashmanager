@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.epitech.cashmanager.R
 import com.epitech.cashmanager.beans.Product
 import com.epitech.cashmanager.models.adapter.ProductAdapter
+import com.epitech.cashmanager.services.ShoppingCartService
 import kotlinx.android.synthetic.main.fragment_market.*
 
 /**
@@ -23,7 +24,6 @@ import kotlinx.android.synthetic.main.fragment_market.*
 class MarketFragment : Fragment() {
 
     private lateinit var productAdapter: ProductAdapter
-    private var products = ArrayList<Product>()
 
     companion object {
         fun newInstance() = MarketFragment()
@@ -43,10 +43,7 @@ class MarketFragment : Fragment() {
     }
 
     private fun getProducts() {
-        val product = Product("basic description", 1, "Asus Rog", "1700", R.drawable.laptop)
-        val product2 = Product("basic description", 2, "Vin Rouge", "70", R.drawable.wine_bottle)
-        products.add(product)
-        products.add(product2)
+        val products = ShoppingCartService.initProducts()
         productAdapter = context?.let { ProductAdapter(it, products) }!!
         products_recyclerview.adapter = productAdapter
     }

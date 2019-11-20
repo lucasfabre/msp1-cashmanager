@@ -1,8 +1,11 @@
 package com.epitech.cashmanager.services
 
 import android.content.Context
+import android.os.Looper
 import android.widget.Toast
+import com.epitech.cashmanager.R
 import com.epitech.cashmanager.beans.CartItem
+import com.epitech.cashmanager.beans.Product
 import com.epitech.cashmanager.repositories.ShoppingCartRepository
 
 /**
@@ -29,18 +32,14 @@ class ShoppingCartService {
 
         fun addItem(cartItem: CartItem) {
             val cart = getCart()
-
-            val targetItem = cart.singleOrNull { it.product.id == cartItem.product.id }
-
+            val targetItem = getTargetItem(cartItem, cart)
             if (targetItem == null) {
                 cartItem.quantity++
                 cart.add(cartItem)
             } else {
-
                 targetItem.quantity++
             }
             saveCart(cart)
-
         }
 
         /**
@@ -53,26 +52,17 @@ class ShoppingCartService {
          */
 
         fun removeItem(cartItem: CartItem, context: Context) {
-
             val cart = getCart()
-
-
-            val targetItem = cart.singleOrNull { it.product.id == cartItem.product.id }
-
+            val targetItem = getTargetItem(cartItem, cart)
             if (targetItem != null) {
-
                 if (targetItem.quantity > 0) {
-
                     Toast.makeText(context, "great quantity", Toast.LENGTH_SHORT).show()
                     targetItem.quantity--
                 } else {
                     cart.remove(targetItem)
                 }
-
             }
-
             saveCart(cart)
-
         }
 
         /**
@@ -100,6 +90,18 @@ class ShoppingCartService {
         }
 
         /**
+         * getTargetItem
+         *
+         * This method is use for get the targetItem of CartItem in cart
+         *
+         * @return CartItem
+         */
+
+        fun getTargetItem(cartItem: CartItem, cart: MutableList<CartItem>): CartItem {
+            return cart.singleOrNull { it.product.id == cartItem.product.id }!!
+        }
+
+        /**
          * getShoppingCartSize
          *
          * This method is use for get size of cart (quantity of products)
@@ -113,6 +115,23 @@ class ShoppingCartService {
                 cartSize += it.quantity;
             }
             return cartSize
+        }
+
+        /**
+         * initProducts
+         *
+         * This method is use for initialise product
+         *
+         * @return ArrayList<Product>
+         */
+
+        fun initProducts(): ArrayList<Product> {
+            var products = ArrayList<Product>()
+            val product = Product("basic description", 1, "Asus Rog", "1700", R.drawable.laptop)
+            val product2 = Product("basic description", 2, "Vin Rouge", "70", R.drawable.wine_bottle)
+            products.add(product)
+            products.add(product2)
+            return products
         }
     }
 
