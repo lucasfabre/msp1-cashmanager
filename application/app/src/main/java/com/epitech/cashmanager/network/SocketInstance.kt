@@ -1,14 +1,8 @@
 package com.epitech.cashmanager.network
 
-import com.epitech.cashmanager.exceptions.ResponseRCPException
 import com.epitech.cashmanager.tools.Config
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.fasterxml.jackson.module.kotlin.readValue
 import java.net.*
 import java.io.*
-import java.lang.Exception
 
 /**
  * Socket Instance
@@ -22,12 +16,11 @@ import java.lang.Exception
  */
 
 class SocketInstance {
-    private var clientSocket: Socket? = null
-    private var out: PrintWriter? = null
-    private var `in`: BufferedReader? = null
+    var clientSocket: Socket? = null
+    var out: PrintWriter? = null
+    var `in`: BufferedReader? = null
 
     private val config: Config = Config()
-    private val mapper = ObjectMapper().registerModule(KotlinModule())
 
     /**
      * start
@@ -44,53 +37,6 @@ class SocketInstance {
     }
 
     /**
-     * sendRCPFormatData
-     *
-     * This method is use for serialize and send a RCP format datas
-     *
-     * @param String method represent the name of method
-     * @param JSONObject params represent the list of params datas
-     * @param Int id represent unique identifier
-     */
-
-    fun sendRCPFormatData(method: String, params: ObjectNode, id: Int) {
-        var json: ObjectNode = mapper.createObjectNode()
-        json.put("jsonrpc", "2.0")
-        json.put("method", method)
-        json.put("params", params)
-        json.put("id", id)
-        val serializedJSON = mapper.writeValueAsString(json)
-        out!!.write(serializedJSON + "\n")
-        out!!.flush()
-    }
-
-    /**
-     * getJSONRCPObect
-     *
-     * This method is use for deserialize string response to an JSONObject RCP format response
-     */
-
-    fun getJsonRcpObject(): ObjectNode {
-        val deserializedJSON: ObjectNode = mapper.createObjectNode()
-        try {
-            var line: String? = `in`!!.readLine()
-            if (line == null) {
-                throw Exception()
-            }
-            val deserializedJSON = mapper.readValue<ObjectNode>(line)
-            deserializedJSON.get("method")
-            if (deserializedJSON.has("error")) {
-                var code: String = deserializedJSON.get("error").asText("code")
-                var message: String = deserializedJSON.get("error").asText("message")
-                throw ResponseRCPException("Code: " + code + ", Message: " + message)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return deserializedJSON
-    }
-
-    /**
      * stop
      *
      * This method is use for stop a Socket
@@ -100,9 +46,5 @@ class SocketInstance {
         `in`!!.close()
         out!!.close()
         clientSocket!!.close()
-    }
-
-    fun isConnected(): Boolean {
-        return clientSocket!!.isConnected()
     }
 }
