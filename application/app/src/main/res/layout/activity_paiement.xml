@@ -15,7 +15,7 @@
 
 
         <Button
-            android:id="@+id/button9"
+            android:id="@+id/nfc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="129dp"
@@ -23,21 +23,19 @@
             android:layout_marginEnd="158dp"
             android:layout_marginBottom="168dp"
             android:text="@string/paiement_nfc"
-            android:onClick="goToNFC"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button10"
+            android:id="@+id/qrCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="115dp"
             android:layout_marginTop="272dp"
             android:layout_marginEnd="144dp"
             android:layout_marginBottom="110dp"
-            android:onClick="goToQr"
             android:text="@string/paiement_qrcode"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
