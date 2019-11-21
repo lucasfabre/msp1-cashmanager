@@ -97,8 +97,8 @@ class ShoppingCartService {
          * @return CartItem
          */
 
-        fun getTargetItem(cartItem: CartItem, cart: MutableList<CartItem>): CartItem {
-            return cart.singleOrNull { it.product.id == cartItem.product.id }!!
+        fun getTargetItem(cartItem: CartItem, cart: MutableList<CartItem>): CartItem? {
+            return cart.singleOrNull { it.product.id == cartItem.product.id }
         }
 
         /**
