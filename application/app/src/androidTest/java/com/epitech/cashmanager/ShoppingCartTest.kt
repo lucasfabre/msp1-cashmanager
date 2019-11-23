@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.epitech.cashmanager
 
 import android.os.Looper
@@ -10,8 +8,8 @@ import com.epitech.cashmanager.beans.Product
 import com.epitech.cashmanager.services.ShoppingCartService
 import com.epitech.cashmanager.services.ShoppingCartService.Companion.getCart
 import junit.framework.Assert.assertNotNull
-import io.paperdb.Paper
 import junit.framework.Assert.assertTrue
+import io.paperdb.Paper
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -41,9 +39,9 @@ class ShoppingCartTest {
         val cart = getCart()
         val cartItem = cart[0]
         Looper.prepare()
-        val quantityBefore = ShoppingCartService.getTargetItem(cartItem, cart).quantity
+        val quantityBefore = ShoppingCartService.getTargetItem(cartItem, cart)!!.quantity
         ShoppingCartService.removeItem(cartItem, appContext)
-        val quantityAfter = ShoppingCartService.getTargetItem(cartItem, cart).quantity
+        val quantityAfter = ShoppingCartService.getTargetItem(cartItem, cart)!!.quantity
         assertTrue(quantityAfter < quantityBefore)
     }
 

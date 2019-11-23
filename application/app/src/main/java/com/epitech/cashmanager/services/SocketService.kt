@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION", "NAME_SHADOWING")
 package com.epitech.cashmanager.services
 
 import com.epitech.cashmanager.exceptions.ResponseRCPException
