@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener{
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
         if (hasInternetAccess(this)){
-            StateNetwork.text = "Connected"
+            StateNetwork.text = getString(R.string.status_2)
             StateNetwork.setTextColor(Color.GREEN)
         }
     }

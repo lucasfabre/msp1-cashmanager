@@ -1,10 +1,9 @@
 package com.epitech.cashmanager.activity
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.epitech.cashmanager.R
 import com.epitech.cashmanager.tools.ManagePermissions
 import com.google.zxing.Result
 import me.dm7.barcodescanner.zxing.ZXingScannerView
@@ -17,7 +16,7 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
     public override fun onCreate(state: Bundle?) {
         super.onCreate(state)
-        title = "Payment by QrCode"
+        title = getString(R.string.paiement_qrcode)
         mScannerView = ZXingScannerView(this)
         setContentView(mScannerView)
     }
