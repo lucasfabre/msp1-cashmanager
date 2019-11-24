@@ -1,25 +1,33 @@
 package com.epitech.cashmanager.activity
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.os.StrictMode
+import android.util.Log
+import android.view.MotionEvent
+import android.view.View
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.epitech.cashmanager.R
 import com.epitech.cashmanager.services.ShoppingCartService
 import com.epitech.cashmanager.tools.ManagePermissions
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import io.paperdb.Paper
+import kotlinx.android.synthetic.main.custom_action_bar.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import android.os.StrictMode
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.app.ActionBar
-import com.epitech.cashmanager.R
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
+
 
 /**
  * MainActivity
@@ -37,6 +45,7 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener{
     var dX:Float = 0.toFloat()
     var dY:Float = 0.toFloat()
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -57,6 +66,7 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener{
         return true
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Paper.init(this)
@@ -74,22 +84,21 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener{
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        /*showCart.setOnClickListener {
-            val intent = Intent(this, ShoppingCartActivity::class.java)
-            startActivity(intent)
-        }*/
         showCart.setOnTouchListener(this)
         cart_size.text = ShoppingCartService.getShoppingCartSize().toString()
-        val list = listOf<String>(
+        val list = listOf(
             Manifest.permission.CAMERA,
             Manifest.permission.INTERNET
         )
         managePermissions = ManagePermissions(this, list, PermissionsRequestCode)
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             managePermissions.checkPermissions()
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
+        if (hasInternetAccess(this)){
+            StateNetwork.text = "Connected"
+            StateNetwork.setTextColor(Color.GREEN)
+        }
     }
 
     /**
@@ -117,4 +126,19 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener{
         }
     }
 
+    fun hasInternetAccess(context: Context?): Boolean {
+            try {
+                val urlc: HttpURLConnection = URL("http://clients3.google.com/generate_204")
+                    .openConnection() as HttpURLConnection
+                urlc.setRequestProperty("User-Agent", "Android")
+                urlc.setRequestProperty("Connection", "close")
+                urlc.connectTimeout = 1500
+                urlc.connect()
+                return urlc.responseCode === 204 &&
+                        urlc.contentLength === 0
+            } catch (e: IOException) {
+                Log.e("Error", e.message)
+            }
+        return false
+    }
 }

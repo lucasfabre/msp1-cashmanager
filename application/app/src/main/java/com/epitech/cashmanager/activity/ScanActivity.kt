@@ -42,8 +42,6 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
      */
 
     override fun handleResult(rawResult: Result) {
-        //***DO SERVER DATA SEND***//
-
         //***Example display message***//
         /*val builder = AlertDialog.Builder(this)
         builder.setTitle("Scan Result")
@@ -55,13 +53,7 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
             "TAG",
             rawResult.barcodeFormat.toString()
         )
-        //****Start QRCode Link INTO CHROME****//
-        /*val uris = Uri.parse(rawResult.text)
-        val intents = Intent(Intent.ACTION_VIEW, uris)
-        val b = Bundle()
-        b.putBoolean("new_window", true)
-        intents.putExtras(b)
-        startActivity(intents)*/
+        //TODO: Place payment processing here with rawResult.text
         //mScannerView?.resumeCameraPreview(this)
     }
 

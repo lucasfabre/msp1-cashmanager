@@ -107,7 +107,6 @@ class MovableFloatingActionButton : FloatingActionButton, View.OnTouchListener {
     }
 
     companion object {
-
         private val CLICK_DRAG_TOLERANCE =
             10f // Often, there will be a slight, unintentional, drag when the user taps the FAB, so we need to account for this.
     }

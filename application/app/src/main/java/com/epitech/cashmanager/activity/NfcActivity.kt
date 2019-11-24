@@ -29,6 +29,7 @@ class NfcActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                 "\nCard Response: "
                         + Utils.toHex(isoDep.tag.id)
             )
+            //TODO: place card processing here
         }
         isoDep.close()
     }

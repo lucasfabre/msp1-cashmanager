@@ -49,7 +49,7 @@ class MarketFragment : Fragment() {
 
     private fun getProducts() {
         val product = Product("basic description", 1, "Huawei P30", "460", "https://cdn.shopify.com/s/files/1/0158/2612/4864/products/1_608x608.jpg?v=1566905322")
-        val product2 = Product("basic description", 2, "Samsung S9", "370","https://image.darty.com/darty?type=image&source=/market/2018/04/11/mkp_L-5ioJQATYOuog.jpeg&width=269&height=405&quality=95" )
+        val product2 = Product("basic description", 2, "Samsung S9", "370","https://images.frandroid.com/wp-content/uploads/2019/04/samsung-galaxy-s9-plus-android.png" )
         val product3 = Product("basic description", 3, "Samsung S10", "600", "https://csmobiles.com/15710-large_default/samsung-galaxy-s10-g973f-128go-dual-sim-bleu.jpg")
         val product4 = Product("basic description", 4, "Iphone 11 Pro", "1100", "https://static.fnac-static.com/multimedia/Images/FR/MDM/7a/b2/bd/12431994/1505-1/tsp20191113133346/Apple-iPhone-11-Pro-64-Go-5-8-Gris-Sideral.jpg")
         val product5 = Product("basic description", 5, "Surface Pro X", "1549", "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE3onLg?ver=3fa8&q=90&m=6&h=705&w=1253&b=%23FFF0F0F0&f=jpg&o=f&p=140&aim=true")
