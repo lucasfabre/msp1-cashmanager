@@ -55,8 +55,7 @@ class ShoppingCartService {
             val cart = getCart()
             val targetItem = getTargetItem(cartItem, cart)
             if (targetItem != null) {
-                if (targetItem.quantity > 0) {
-                    Toast.makeText(context, "great quantity", Toast.LENGTH_SHORT).show()
+                if (targetItem.quantity > 1) {
                     targetItem.quantity--
                 } else {
                     cart.remove(targetItem)
@@ -135,4 +134,8 @@ class ShoppingCartService {
         }
     }
 
+        fun ClearCart(){
+            cartRepository.clearCart()
+        }
+    }
 }

@@ -13,4 +13,7 @@ class ShoppingCartRepository {
         return Paper.book().read("cart", mutableListOf())
     }
 
+    fun clearCart(){
+        Paper.book().destroy()
+    }
 }

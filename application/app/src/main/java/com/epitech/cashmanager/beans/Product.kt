@@ -1,5 +1,6 @@
 package com.epitech.cashmanager.beans
 
+import android.graphics.Bitmap
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -29,6 +30,5 @@ data class Product(
     var price: String? = null,
 
     @SerializedName("photos")
-    var photos: Int? = null
-
+    var photos: String? = null
 )
