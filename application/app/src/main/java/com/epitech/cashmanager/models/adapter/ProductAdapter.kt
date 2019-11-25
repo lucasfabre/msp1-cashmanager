@@ -61,9 +61,7 @@ class ProductAdapter(var context: Context, var products: List<Product> = arrayLi
             //itemView.product_image.setImageBitmap(product.photos)
             Observable.create(ObservableOnSubscribe<MutableList<CartItem>> {
                 itemView.addToCart.setOnClickListener { _ ->
-
                     val item = CartItem(product)
-
                     ShoppingCartService.addItem(item)
                     //notify users
                     Snackbar.make(
@@ -93,5 +91,4 @@ class ProductAdapter(var context: Context, var products: List<Product> = arrayLi
             }
         }
     }
-
 }

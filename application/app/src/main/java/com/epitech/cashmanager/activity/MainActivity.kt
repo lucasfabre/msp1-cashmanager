@@ -2,7 +2,6 @@ package com.epitech.cashmanager.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
@@ -95,7 +94,7 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener{
             managePermissions.checkPermissions()
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-        if (hasInternetAccess(this)){
+        if (hasInternetAccess()){
             StateNetwork.text = getString(R.string.status_2)
             StateNetwork.setTextColor(Color.GREEN)
         }
@@ -126,7 +125,7 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener{
         }
     }
 
-    fun hasInternetAccess(context: Context?): Boolean {
+    fun hasInternetAccess(): Boolean {
             try {
                 val urlc: HttpURLConnection = URL("http://clients3.google.com/generate_204")
                     .openConnection() as HttpURLConnection

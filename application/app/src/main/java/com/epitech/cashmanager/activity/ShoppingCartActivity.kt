@@ -44,15 +44,6 @@ class ShoppingCartActivity : AppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     fun deleteAll(view: View) {
         ShoppingCartService.ClearCart()
         adapter = ShoppingCartAdapter(this, ShoppingCartService.getCart())

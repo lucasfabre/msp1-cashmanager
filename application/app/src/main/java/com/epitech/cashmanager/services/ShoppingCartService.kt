@@ -31,16 +31,13 @@ class ShoppingCartService {
             val cart = getCart()
 
             val targetItem = cart.singleOrNull { it.product.id == cartItem.product.id }
-
             if (targetItem == null) {
                 cartItem.quantity++
                 cart.add(cartItem)
             } else {
-
                 targetItem.quantity++
             }
             saveCart(cart)
-
         }
 
         /**
@@ -53,26 +50,16 @@ class ShoppingCartService {
          */
 
         fun removeItem(cartItem: CartItem, context: Context) {
-
             val cart = getCart()
-
-
             val targetItem = cart.singleOrNull { it.product.id == cartItem.product.id }
-
             if (targetItem != null) {
-
-                if (targetItem.quantity > 0) {
-
-                    Toast.makeText(context, "great quantity", Toast.LENGTH_SHORT).show()
+                if (targetItem.quantity > 1) {
                     targetItem.quantity--
                 } else {
                     cart.remove(targetItem)
                 }
-
             }
-
             saveCart(cart)
-
         }
 
         /**
@@ -114,6 +101,7 @@ class ShoppingCartService {
             }
             return cartSize
         }
+
         fun ClearCart(){
             cartRepository.clearCart()
         }
