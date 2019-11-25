@@ -19,6 +19,8 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import android.text.TextUtils
 import android.view.Gravity
 import com.sdsmdg.tastytoast.TastyToast;
+import org.json.JSONArray
+import org.json.JSONObject
 
 
 /**
@@ -36,6 +38,9 @@ class ServerSettingsFragment : Fragment()  {
     private var socketService: SocketService = SocketService()
     private val mapper = ObjectMapper().registerModule(KotlinModule())
     private val settingService: ServerSettingsService = ServerSettingsService()
+    private val settings: JSONObject ?= null
+    private val errors: JSONArray = JSONArray()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,47 +50,63 @@ class ServerSettingsFragment : Fragment()  {
         settingsViewModel =
             ViewModelProviders.of(this).get(ServerSettingsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_settings, container, false)
-        /* settingsViewModel.hostname.observe(this, Observer {
-            hostname.setText(it)
-        }) */
+
+        if(settings == null) {
+            val settings: JSONObject = settingService.getSettings()
+        }
+
+        val validateErrors: JSONObject = JSONObject()
 
         val hostname: EditText = root.findViewById(R.id.hostname)
-        if (TextUtils.isEmpty(hostname.getText())) {
-            TastyToast.makeText(
-                root.context,
-                "Hostname is required",
-                TastyToast.LENGTH_SHORT,
-                TastyToast.INFO
-            ).setGravity(Gravity.TOP, 0, 150)
+        if(settings != null) {
+            hostname.setText(settings.getString("hostname"))
         }
 
         val password: EditText = root.findViewById(R.id.password)
-        if (TextUtils.isEmpty(password.getText())) {
-            TastyToast.makeText(
-                root.context,
-                "Password is required",
-                TastyToast.LENGTH_SHORT,
-                TastyToast.INFO
-            ).setGravity(Gravity.TOP, 0, 250)
-        }
-
-        val saveSettings: CheckBox = root.findViewById(R.id.checkbox);
-        if (saveSettings.isChecked) {
-            settingService.saveData(root)
+        if(settings != null) {
+            password.setText(settings.getString("password"))
         }
 
         val btnConnexion: Button = root.findViewById(R.id.btnConnexion)
-        btnConnexion.text = "Connexion"
         btnConnexion.setOnClickListener {
             btnConnexion.isEnabled = false
 
-            var params: ObjectNode = mapper.createObjectNode()
+            // Form validation
+            if (TextUtils.isEmpty(hostname.getText())) {
+                errors.put("Hostname is required" + "\n")
+            }
+            if (TextUtils.isEmpty(password.getText())) {
+                errors.put("Password is required")
+            }
+            validateErrors.put("errors", errors)
+
+            // Form persistance
+            if(!validateErrors.equals(null)) {
+                val saveSettings: CheckBox = root.findViewById(R.id.checkbox)
+                if (saveSettings.isChecked) {
+                    val settings: JSONObject = JSONObject()
+                    settings.put("hostname", hostname.getText().toString())
+                    settings.put("password", password.getText().toString())
+
+                    settingService.saveSettings(root, settings)
+                }
+            } else {
+                TastyToast.makeText(
+                    root.context,
+                    validateErrors.getJSONArray("errors").toString(),
+                    TastyToast.LENGTH_SHORT,
+                    TastyToast.INFO
+                ).setGravity(Gravity.TOP, 0, 150)
+            }
+
+            // Socket
+            /*var params: ObjectNode = mapper.createObjectNode()
             params.put("accountId", "acc1")
             socketService.getSocket().start()
             socketService.sendRCPFormatData("DescribeAccount", params, 1)
             println(socketService.getJsonRcpObject())
             println(socketService.isConnected())
-            btnConnexion.isEnabled = true
+            btnConnexion.isEnabled = true*/
         }
 
         return root

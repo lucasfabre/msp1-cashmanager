@@ -1,5 +1,8 @@
 package com.epitech.cashmanager.repositories
 
+import io.paperdb.Paper
+import org.json.JSONObject
+
 /**
  * Server settings repository
  *
@@ -7,7 +10,13 @@ package com.epitech.cashmanager.repositories
  */
 
 class ServerSettingsRepository {
-    /**
-     * Future methods for data persistance
-     */
+
+    fun saveSettings(settings: JSONObject) {
+        Paper.book().write("settings", settings)
+    }
+
+    fun getSettings(): JSONObject {
+        return Paper.book().read("settings", JSONObject())
+    }
+
 }

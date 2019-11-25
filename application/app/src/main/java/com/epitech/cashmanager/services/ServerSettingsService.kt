@@ -1,7 +1,10 @@
 package com.epitech.cashmanager.services
 
+import android.view.Gravity
 import android.view.View
-import android.widget.Toast
+import com.epitech.cashmanager.repositories.ServerSettingsRepository
+import com.sdsmdg.tastytoast.TastyToast
+import org.json.JSONObject
 
 /**
  * Server settings service
@@ -11,8 +14,20 @@ import android.widget.Toast
 
 class ServerSettingsService {
 
-    fun saveData(view: View) {
-        Toast.makeText(view.context, "Your datas as been saved", Toast.LENGTH_SHORT).show()
+    private val persist: ServerSettingsRepository = ServerSettingsRepository()
+
+    fun saveSettings(view: View, settings: JSONObject) {
+        TastyToast.makeText(
+            view.context,
+            "Your datas as been saved",
+            TastyToast.LENGTH_SHORT,
+            TastyToast.SUCCESS
+        ).setGravity(Gravity.TOP, 0, 150)
+        persist.saveSettings(settings)
+    }
+
+    fun getSettings(): JSONObject {
+        return persist.getSettings()
     }
 
 }
