@@ -87,4 +87,5 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.1.0'
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+"
     implementation 'com.sdsmdg.tastytoast:tastytoast:0.1.1'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

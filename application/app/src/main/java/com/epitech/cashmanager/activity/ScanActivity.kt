@@ -1,10 +1,9 @@
 package com.epitech.cashmanager.activity
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.epitech.cashmanager.R
 import com.epitech.cashmanager.tools.ManagePermissions
 import com.google.zxing.Result
 import me.dm7.barcodescanner.zxing.ZXingScannerView
@@ -17,11 +16,9 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
     public override fun onCreate(state: Bundle?) {
         super.onCreate(state)
-        title = "Payment by QrCode"
+        title = getString(R.string.paiement_qrcode)
         mScannerView = ZXingScannerView(this)
         setContentView(mScannerView)
-
-
     }
 
     public override fun onResume() {
@@ -44,6 +41,7 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
      */
 
     override fun handleResult(rawResult: Result) {
+        //***Example display message***//
         /*val builder = AlertDialog.Builder(this)
         builder.setTitle("Scan Result")
         builder.setMessage(qrLinks.text)
@@ -54,13 +52,7 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
             "TAG",
             rawResult.barcodeFormat.toString()
         )
-        //****Start QRCode Link INTO CHROME****//
-        val uris = Uri.parse(rawResult.text)
-        val intents = Intent(Intent.ACTION_VIEW, uris)
-        val b = Bundle()
-        b.putBoolean("new_window", true)
-        intents.putExtras(b)
-        startActivity(intents)
+        //TODO: Place payment processing here with rawResult.text
         //mScannerView?.resumeCameraPreview(this)
     }
 

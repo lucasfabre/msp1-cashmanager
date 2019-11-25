@@ -29,13 +29,14 @@ class NfcActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                 "\nCard Response: "
                         + Utils.toHex(isoDep.tag.id)
             )
+            //TODO: place card processing here
         }
         isoDep.close()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        title = "Payment NFC"
+        title = getString(R.string.paiement_nfc)
         setContentView(R.layout.activity_nfcpay)
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
     }

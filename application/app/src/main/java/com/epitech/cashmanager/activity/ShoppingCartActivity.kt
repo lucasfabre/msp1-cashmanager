@@ -2,7 +2,8 @@ package com.epitech.cashmanager.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.epitech.cashmanager.R
@@ -25,13 +26,14 @@ class ShoppingCartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shopping_cart)
-        title = "Shopping Cart"
+        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar?.setDisplayShowCustomEnabled(true)
+        supportActionBar?.setCustomView(R.layout.custom_action_bar)
         adapter = ShoppingCartAdapter(this, ShoppingCartService.getCart())
         adapter.notifyDataSetChanged()
 
         shopping_cart_recyclerView.adapter = adapter
         shopping_cart_recyclerView.layoutManager = LinearLayoutManager(this)
-
         val totalPrice = ShoppingCartService.getCart()
             .fold(0.toDouble()) { acc, cartItem -> acc + cartItem.quantity.times(cartItem.product.price!!.toDouble()) }
         total_price.text = "${totalPrice}€"
@@ -41,13 +43,10 @@ class ShoppingCartActivity : AppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-            }
-        }
-        return super.onOptionsItemSelected(item)
+    fun deleteAll(view: View) {
+        ShoppingCartService.clearCart()
+        adapter = ShoppingCartAdapter(this, ShoppingCartService.getCart())
+        adapter.notifyDataSetChanged()
+        setContentView(R.layout.activity_shopping_cart)
     }
-
 }
