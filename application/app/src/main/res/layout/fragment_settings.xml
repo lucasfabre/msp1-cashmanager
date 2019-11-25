@@ -66,6 +66,12 @@
                 android:hint="@string/serverpassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/saveSettings" />
+
         <Button
             android:id="@+id/btnConnexion"
             android:layout_width="300dp"
