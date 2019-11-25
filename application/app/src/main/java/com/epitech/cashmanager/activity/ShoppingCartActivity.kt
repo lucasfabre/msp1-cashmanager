@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.epitech.cashmanager.R
 import com.epitech.cashmanager.models.adapter.ShoppingCartAdapter
 import com.epitech.cashmanager.services.ShoppingCartService
-import io.paperdb.Paper
 import kotlinx.android.synthetic.main.activity_shopping_cart.*
 
 /**

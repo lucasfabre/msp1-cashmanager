@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import android.os.StrictMode
 import com.epitech.cashmanager.R
 
-
 /**
  * MainActivity
  *

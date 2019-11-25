@@ -17,7 +17,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import android.text.TextUtils
-import android.widget.Toast
+import android.view.Gravity
+import com.sdsmdg.tastytoast.TastyToast;
 
 
 /**
@@ -48,10 +49,24 @@ class ServerSettingsFragment : Fragment()  {
             hostname.setText(it)
         }) */
 
-        val hostname: EditText = root.findViewById(R.id.text_settings)
+        val hostname: EditText = root.findViewById(R.id.hostname)
         if (TextUtils.isEmpty(hostname.getText())) {
-            Toast.makeText(root.context, "Hostname is required", Toast.LENGTH_SHORT).show()
+            TastyToast.makeText(
+                root.context,
+                "Hostname is required",
+                TastyToast.LENGTH_SHORT,
+                TastyToast.INFO
+            ).setGravity(Gravity.TOP, 0, 150)
+        }
 
+        val password: EditText = root.findViewById(R.id.password)
+        if (TextUtils.isEmpty(password.getText())) {
+            TastyToast.makeText(
+                root.context,
+                "Password is required",
+                TastyToast.LENGTH_SHORT,
+                TastyToast.INFO
+            ).setGravity(Gravity.TOP, 0, 250)
         }
 
         val saveSettings: CheckBox = root.findViewById(R.id.checkbox);
@@ -63,12 +78,14 @@ class ServerSettingsFragment : Fragment()  {
         btnConnexion.text = "Connexion"
         btnConnexion.setOnClickListener {
             btnConnexion.isEnabled = false
+
             var params: ObjectNode = mapper.createObjectNode()
             params.put("accountId", "acc1")
             socketService.getSocket().start()
             socketService.sendRCPFormatData("DescribeAccount", params, 1)
             println(socketService.getJsonRcpObject())
             println(socketService.isConnected())
+            btnConnexion.isEnabled = true
         }
 
         return root
