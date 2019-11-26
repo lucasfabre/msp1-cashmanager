@@ -62,6 +62,7 @@ class ShoppingCartAdapter(var context: Context, var cartItems: List<CartItem>) :
                     itemView.addProduct.setOnClickListener { _ ->
                         ShoppingCartService.addItem(cartItem)
                         it.onNext(ShoppingCartService.getCart())
+
                     }
                     itemView.removeProduct.setOnClickListener { _ ->
                         ShoppingCartService.removeItem(cartItem, itemView.context)
