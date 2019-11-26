@@ -30,8 +30,8 @@ class SocketInstance {
      * @param Int port represent the port of the app
      */
 
-    fun start() {
-        clientSocket = Socket(config.ip, config.port)
+    fun start(hostname: String) {
+        clientSocket = Socket(hostname, config.port)
         out = PrintWriter(clientSocket!!.getOutputStream(), true)
         `in` = BufferedReader(InputStreamReader(clientSocket!!.getInputStream()))
     }
