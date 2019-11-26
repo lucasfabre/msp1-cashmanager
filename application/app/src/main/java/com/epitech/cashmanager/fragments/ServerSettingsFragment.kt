@@ -62,8 +62,6 @@ class ServerSettingsFragment : Fragment()  {
 
         val btnConnexion: Button = root.findViewById(R.id.btnConnexion)
         btnConnexion.setOnClickListener {
-            btnConnexion.isEnabled = false
-
             // Form validation
             if (TextUtils.isEmpty(hostname.getText())) {
                 errors.put("Hostname is required")
@@ -101,12 +99,13 @@ class ServerSettingsFragment : Fragment()  {
                 // Socket
                 var params: ObjectNode = mapper.createObjectNode()
                 params.put("accountId", "acc1")
+                btnConnexion.isEnabled = false
                 socketService.getSocket().start(hostnameInput)
                 socketService.sendRCPFormatData("DescribeAccount", params, 1)
                 println(socketService.getJsonRcpObject())
                 socketService.getSocket().stop()
-                println(socketService.isConnected())
                 btnConnexion.isEnabled = true
+                println(socketService.isConnected())
             }
 
 
