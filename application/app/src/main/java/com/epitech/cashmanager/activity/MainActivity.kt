@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener{
             }
             MotionEvent.ACTION_UP -> {
                 val intent = Intent(this, ShoppingCartActivity::class.java)
+                intent.putExtra("val_conn", StateNetwork.text.toString())
                 startActivity(intent)
             }
             else -> return false

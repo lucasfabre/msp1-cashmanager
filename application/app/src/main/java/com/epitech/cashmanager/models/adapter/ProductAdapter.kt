@@ -87,7 +87,6 @@ class ProductAdapter(var context: Context, var products: List<Product> = arrayLi
                     quantity += cartItem.quantity
                 }
                 (itemView.context as MainActivity).cart_size.text = quantity.toString()
-                Toast.makeText(itemView.context, "size of cart $quantity", Toast.LENGTH_SHORT).show()
             }
         }
     }
