@@ -37,8 +37,7 @@ class ServerSettingsFragment : Fragment()  {
     private var socketService: SocketService = SocketService()
     private val mapper = ObjectMapper().registerModule(KotlinModule())
     private val settingService: ServerSettingsService = ServerSettingsService()
-    private val settings: JSONObject = settingService.getSettings()
-    private val errors: JSONArray = JSONArray()
+    private val validateErrors: JSONObject = JSONObject()
     private val hostnameInput: String = ""
 
     override fun onCreateView(
@@ -50,18 +49,23 @@ class ServerSettingsFragment : Fragment()  {
             ViewModelProviders.of(this).get(ServerSettingsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_settings, container, false)
 
-        val validateErrors: JSONObject = JSONObject()
-
         val hostname: EditText = root.findViewById(R.id.hostname)
         val password: EditText = root.findViewById(R.id.password)
 
-        if(!settings.equals(null)) {
-            hostname.setText(settings.getString("hostname"))
-            password.setText(settings.getString("password"))
+        val settings: JSONObject = settingService.getSettings()
+
+        if(settings.length() > 0) {
+            if(settings.has("hostname")) {
+                hostname.setText(settings.getString("hostname"))
+            }
+            if(settings.has("password")) {
+                password.setText(settings.getString("password"))
+            }
         }
 
         val btnConnexion: Button = root.findViewById(R.id.btnConnexion)
         btnConnexion.setOnClickListener {
+            val errors: JSONArray = JSONArray()
             // Form validation
             if (TextUtils.isEmpty(hostname.getText())) {
                 errors.put("Hostname is required")
@@ -71,6 +75,7 @@ class ServerSettingsFragment : Fragment()  {
             }
             validateErrors.put("errors", errors)
             val jsonArray = validateErrors.getJSONArray("errors")
+
             // Form persistance
             val errorsBuild: StringBuilder = java.lang.StringBuilder()
             if(validateErrors.getJSONArray("errors") != null && jsonArray.length() > 0) {
@@ -86,6 +91,7 @@ class ServerSettingsFragment : Fragment()  {
                     TastyToast.LENGTH_LONG,
                     TastyToast.ERROR
                 ).setGravity(Gravity.BOTTOM, 0, 150)
+                validateErrors.remove("errors")
             } else {
                 val saveSettings: CheckBox = root.findViewById(R.id.checkbox)
                 val hostnameInput = hostname.getText().toString()
@@ -95,19 +101,18 @@ class ServerSettingsFragment : Fragment()  {
                     settings.put("password", password.getText().toString())
                     settingService.saveSettings(root, settings)
                 }
-
-                // Socket
-                var params: ObjectNode = mapper.createObjectNode()
-                params.put("accountId", "acc1")
-                btnConnexion.isEnabled = false
-                socketService.getSocket().start(hostnameInput)
-                socketService.sendRCPFormatData("DescribeAccount", params, 1)
-                println(socketService.getJsonRcpObject())
-                socketService.getSocket().stop()
-                btnConnexion.isEnabled = true
-                println(socketService.isConnected())
             }
 
+            // Socket
+            /*var params: ObjectNode = mapper.createObjectNode()
+            params.put("accountId", "acc1")
+            btnConnexion.isEnabled = false
+            socketService.getSocket().start(hostnameInput)
+            socketService.sendRCPFormatData("DescribeAccount", params, 1)
+            println(socketService.getJsonRcpObject(root.context))
+            socketService.getSocket().stop()
+            btnConnexion.isEnabled = true
+            println(socketService.isConnected())*/
 
         }
 
