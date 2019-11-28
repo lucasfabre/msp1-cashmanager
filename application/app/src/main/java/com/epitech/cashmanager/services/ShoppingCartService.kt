@@ -1,9 +1,6 @@
 package com.epitech.cashmanager.services
 
 import android.content.Context
-import android.os.Looper
-import android.widget.Toast
-import com.epitech.cashmanager.R
 import com.epitech.cashmanager.beans.CartItem
 import com.epitech.cashmanager.beans.Product
 import com.epitech.cashmanager.repositories.ShoppingCartRepository

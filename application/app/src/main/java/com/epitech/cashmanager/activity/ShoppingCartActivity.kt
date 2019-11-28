@@ -14,7 +14,6 @@ import com.epitech.cashmanager.services.ShoppingCartService
 import kotlinx.android.synthetic.main.activity_shopping_cart.*
 import kotlinx.android.synthetic.main.custom_action_bar.*
 
-
 /**
  * ShoppingCartActivity
  *

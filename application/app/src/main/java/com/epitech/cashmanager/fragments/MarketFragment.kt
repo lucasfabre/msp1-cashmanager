@@ -1,19 +1,15 @@
 package com.epitech.cashmanager.fragments
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.epitech.cashmanager.R
-import com.epitech.cashmanager.beans.Product
 import com.epitech.cashmanager.models.adapter.ProductAdapter
 import com.epitech.cashmanager.services.ShoppingCartService
 import kotlinx.android.synthetic.main.fragment_market.*
-import java.io.InputStream
 
 /**
  * Market fragment
