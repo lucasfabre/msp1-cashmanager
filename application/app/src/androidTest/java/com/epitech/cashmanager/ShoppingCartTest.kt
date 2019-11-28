@@ -27,7 +27,7 @@ class ShoppingCartTest {
 
     @Test
     fun addItem() {
-        val product = Product("Test", 1, "name", "200", 2010398476)
+        val product = Product("Test", 1, "name", "200", "2010398476")
         var cartItem: CartItem = CartItem(product, 2)
         Paper.init(appContext)
         ShoppingCartService.addItem(cartItem)

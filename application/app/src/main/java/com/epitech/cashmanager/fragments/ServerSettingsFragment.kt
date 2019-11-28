@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import android.text.TextUtils
 import android.view.Gravity
-import com.sdsmdg.tastytoast.TastyToast;
+import com.sdsmdg.tastytoast.TastyToast
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -38,7 +38,6 @@ class ServerSettingsFragment : Fragment()  {
     private val mapper = ObjectMapper().registerModule(KotlinModule())
     private val settingService: ServerSettingsService = ServerSettingsService()
     private val validateErrors: JSONObject = JSONObject()
-    private val hostnameInput: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,7 +87,7 @@ class ServerSettingsFragment : Fragment()  {
                 TastyToast.makeText(
                     root.context,
                     errorsBuild.toString(),
-                    TastyToast.LENGTH_LONG,
+                    TastyToast.LENGTH_SHORT,
                     TastyToast.ERROR
                 ).setGravity(Gravity.BOTTOM, 0, 150)
                 validateErrors.remove("errors")
@@ -102,19 +101,18 @@ class ServerSettingsFragment : Fragment()  {
                     settingService.clearSettings()
                     settingService.saveSettings(root, settings)
                 }
+
+                // Socket
+                var params: ObjectNode = mapper.createObjectNode()
+                params.put("accountId", "acc1")
+                btnConnexion.isEnabled = false
+                socketService.getSocket().start(hostname.getText().toString(), root.context)
+                socketService.sendRCPFormatData("DescribeAccount", params, 1)
+                println(socketService.getJsonRcpObject())
+                socketService.getSocket().stop()
+                btnConnexion.isEnabled = true
+                println(socketService.isConnected())
             }
-
-            // Socket
-            /*var params: ObjectNode = mapper.createObjectNode()
-            params.put("accountId", "acc1")
-            btnConnexion.isEnabled = false
-            socketService.getSocket().start(hostnameInput)
-            socketService.sendRCPFormatData("DescribeAccount", params, 1)
-            println(socketService.getJsonRcpObject(root.context))
-            socketService.getSocket().stop()
-            btnConnexion.isEnabled = true
-            println(socketService.isConnected())*/
-
         }
 
         return root

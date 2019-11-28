@@ -1,8 +1,12 @@
 package com.epitech.cashmanager.network
 
+import android.content.Context
+import android.view.Gravity
 import com.epitech.cashmanager.tools.Config
+import com.sdsmdg.tastytoast.TastyToast
 import java.net.*
 import java.io.*
+import java.lang.Exception
 
 /**
  * Socket Instance
@@ -30,10 +34,26 @@ class SocketInstance {
      * @param Int port represent the port of the app
      */
 
-    fun start(hostname: String) {
-        clientSocket = Socket(hostname, config.port)
-        out = PrintWriter(clientSocket!!.getOutputStream(), true)
-        `in` = BufferedReader(InputStreamReader(clientSocket!!.getInputStream()))
+    fun start(hostname: String, context: Context) {
+        try {
+            clientSocket = Socket(hostname, config.port)
+            out = PrintWriter(clientSocket!!.getOutputStream(), true)
+            `in` = BufferedReader(InputStreamReader(clientSocket!!.getInputStream()))
+            TastyToast.makeText(
+                context,
+                "Connected",
+                TastyToast.LENGTH_SHORT,
+                TastyToast.SUCCESS
+            ).setGravity(Gravity.BOTTOM, 0, 150)
+        } catch (e: Exception) {
+            TastyToast.makeText(
+                context,
+                e.message,
+                TastyToast.LENGTH_LONG,
+                TastyToast.ERROR
+            ).setGravity(Gravity.BOTTOM, 0, 150)
+            e.printStackTrace()
+        }
     }
 
     /**

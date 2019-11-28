@@ -23,7 +23,7 @@ class ServerSettingsService {
             "Your datas as been saved",
             TastyToast.LENGTH_SHORT,
             TastyToast.SUCCESS
-        ).setGravity(Gravity.TOP, 0, 150)
+        ).setGravity(Gravity.BOTTOM, 0, 150)
         persist.saveSettings(settings)
     }
 
