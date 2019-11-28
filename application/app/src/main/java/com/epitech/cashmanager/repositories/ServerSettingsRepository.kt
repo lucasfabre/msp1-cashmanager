@@ -19,4 +19,8 @@ class ServerSettingsRepository {
         return Paper.book().read("settings", JSONObject())
     }
 
+    fun clearSettings() {
+        Paper.book().delete("settings")
+    }
+
 }

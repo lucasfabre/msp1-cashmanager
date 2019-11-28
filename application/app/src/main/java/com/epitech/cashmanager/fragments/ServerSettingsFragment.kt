@@ -99,6 +99,7 @@ class ServerSettingsFragment : Fragment()  {
                     val settings: JSONObject = JSONObject()
                     settings.put("hostname", hostname.getText().toString())
                     settings.put("password", password.getText().toString())
+                    settingService.clearSettings()
                     settingService.saveSettings(root, settings)
                 }
             }

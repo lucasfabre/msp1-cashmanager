@@ -4,6 +4,7 @@ import android.view.Gravity
 import android.view.View
 import com.epitech.cashmanager.repositories.ServerSettingsRepository
 import com.sdsmdg.tastytoast.TastyToast
+import io.paperdb.Paper
 import org.json.JSONObject
 
 /**
@@ -28,6 +29,10 @@ class ServerSettingsService {
 
     fun getSettings(): JSONObject {
         return persist.getSettings()
+    }
+
+    fun clearSettings() {
+        persist.clearSettings()
     }
 
 }
