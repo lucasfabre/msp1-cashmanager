@@ -37,10 +37,10 @@ class NfcActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         val isoDep = IsoDep.get(tag)
         isoDep.connect()
         runOnUiThread {
-            NFCView.append(
+            /*NFCView.append(
                 "\nCard Response: "
                         + Utils.toHex(isoDep.tag.id)
-            )
+            )*/
             //TODO: place card processing here
             val errors: JSONArray = JSONArray()
             val totalPrice = ShoppingCartService.getCart()
@@ -76,6 +76,7 @@ class NfcActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                 validateErrors.remove("errors")
             }
             isoDep.close()
+            finish()
         }
     }
 

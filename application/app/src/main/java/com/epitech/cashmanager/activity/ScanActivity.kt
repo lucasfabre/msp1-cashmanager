@@ -90,5 +90,6 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
             ).setGravity(Gravity.BOTTOM, 0, 150)
             validateErrors.remove("errors")
         }
+        finish()
     }
 }
