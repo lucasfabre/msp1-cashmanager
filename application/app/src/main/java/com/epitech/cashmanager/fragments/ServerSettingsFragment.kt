@@ -93,7 +93,6 @@ class ServerSettingsFragment : Fragment()  {
                 validateErrors.remove("errors")
             } else {
                 val saveSettings: CheckBox = root.findViewById(R.id.checkbox)
-                val hostnameInput = hostname.getText().toString()
                 if (saveSettings.isChecked) {
                     val settings: JSONObject = JSONObject()
                     settings.put("hostname", hostname.getText().toString())
@@ -107,11 +106,12 @@ class ServerSettingsFragment : Fragment()  {
                 params.put("accountId", "acc1")
                 btnConnexion.isEnabled = false
                 socketService.getSocket().start(hostname.getText().toString(), root.context)
-                socketService.sendRCPFormatData("DescribeAccount", params, 1)
-                println(socketService.getJsonRcpObject())
-                socketService.getSocket().stop()
+                if(socketService.getSocket().clientSocket != null) {
+                    socketService.sendRCPFormatData("DescribeAccount", params, 1)
+                    println(socketService.getJsonRcpObject())
+                    println(socketService.isConnected())
+                }
                 btnConnexion.isEnabled = true
-                println(socketService.isConnected())
             }
         }
 
