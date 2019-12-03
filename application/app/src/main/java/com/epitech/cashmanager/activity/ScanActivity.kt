@@ -60,17 +60,31 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         val errors: JSONArray = JSONArray()
         val totalPrice = ShoppingCartService.getCart()
             .fold(0.toDouble()) { acc, cartItem -> acc + cartItem.quantity.times(cartItem.product.price!!.toDouble()) }
+        Thread({
+            socketService.getSocket().start("192.168.0.37", this)
+        })
         var params: ObjectNode = mapper.createObjectNode()
-        params.put("CreditorAccountId", "acc2")
-        params.put("Amount", totalPrice)
-        socketService.sendRCPFormatData("StartTransaction", params, 1)
-        socketService.getJsonRcpObject()
-        params = mapper.createObjectNode()
         params.put("DebtorAccountId", "acc1")
-        socketService.sendRCPFormatData("ValidateAndProcessTransaction", params, 2)
-        val deserializedRep2 = socketService.getJsonRcpObject()
-        if (deserializedRep2.get("result").asText("success")  == "false") {
-            errors.put("Payment denied")
+        socketService.sendRCPFormatData("ValidateAndProcessTransaction", params, 1)
+        val rcpResult = socketService.getJsonRcpObject()
+        println("###########" + rcpResult)
+        if (rcpResult.get("result").has("Amount")) {
+            TastyToast.makeText(
+                this,
+                rcpResult.get("result").get("Amount").toString(),
+                TastyToast.LENGTH_SHORT,
+                TastyToast.INFO
+            ).setGravity(Gravity.BOTTOM, 0, 150)
+        } else {
+            params = mapper.createObjectNode()
+            params.put("CreditorAccountId", "acc2")
+            params.put("Amount", totalPrice)
+            socketService.sendRCPFormatData("StartTransaction", params, 2)
+            val result = socketService.getJsonRcpObject()
+            if (result.get("result").asText("success")  == "false") {
+                errors.put("Payment denied")
+            }
+            println("###########" + result)
         }
         validateErrors.put("errors", errors)
         val jsonArray = validateErrors.getJSONArray("errors")

@@ -63,6 +63,15 @@ class ServerSettingsFragment : Fragment()  {
         }
 
         val btnConnexion: Button = root.findViewById(R.id.btnConnexion)
+
+        if(socketService.getSocket().clientSocket != null) {
+            if(socketService.getSocket().clientSocket!!.isClosed) {
+                btnConnexion.setEnabled(true)
+            } else {
+                btnConnexion.setEnabled(false)
+            }
+        }
+
         btnConnexion.setOnClickListener {
             val errors: JSONArray = JSONArray()
             // Form validation
@@ -104,14 +113,13 @@ class ServerSettingsFragment : Fragment()  {
                 // Socket
                 var params: ObjectNode = mapper.createObjectNode()
                 params.put("accountId", "acc1")
-                btnConnexion.isEnabled = false
+
                 socketService.getSocket().start(hostname.getText().toString(), root.context)
                 if(socketService.getSocket().clientSocket != null) {
                     socketService.sendRCPFormatData("DescribeAccount", params, 1)
-                    println(socketService.getJsonRcpObject())
-                    println(socketService.isConnected())
+                    btnConnexion.isEnabled = false
+                    println("Connected: "+ socketService.isConnected())
                 }
-                btnConnexion.isEnabled = true
             }
         }
 
