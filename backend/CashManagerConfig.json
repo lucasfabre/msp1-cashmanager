@@ -8,7 +8,7 @@
     ],
     "preferences": {
         "server.port": "8080",
-        "transactions.maxdelay": "5",
-        "transactions.maxretry": "2"
+        "transactions.maxdelay": "30",
+        "transactions.maxretry": "3"
     }
 }
