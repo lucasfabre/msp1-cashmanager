@@ -7,6 +7,7 @@ import fr.cashmanager.command.CommandStartTransaction;
 import fr.cashmanager.command.CommandValidateAndProcessTransaction;
 import fr.cashmanager.config.IConfig;
 import fr.cashmanager.config.LocalFileConfig;
+import fr.cashmanager.config.Preference;
 import fr.cashmanager.impl.ioc.ServicesContainer;
 import fr.cashmanager.logging.LoggerFactory;
 import fr.cashmanager.logging.LoggerService;
@@ -50,6 +51,9 @@ public class CashManager {
     public static void initServices(ServicesContainer container) throws Exception {
         IConfig config = container.get(IConfig.class);
         config.configure();
+        if (Integer.parseInt(config.getPreference(Preference.MAX_TRANSACTION_DELAY)) > 180) {
+            throw new Exception("The preference " + Preference.MAX_TRANSACTION_DELAY.getName() + " cannot be more than 180 seconds");
+        }
     }
 
     /**
