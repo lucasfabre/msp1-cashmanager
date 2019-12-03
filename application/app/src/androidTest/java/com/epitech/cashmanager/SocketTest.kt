@@ -3,6 +3,7 @@
 package com.epitech.cashmanager
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.epitech.cashmanager.network.SocketInstance
 import com.epitech.cashmanager.services.SocketService
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -22,13 +23,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class SocketTest {
 
+    val appContext = InstrumentationRegistry.getInstrumentation().targetContext
     private val socketInstance: SocketInstance = SocketInstance()
     private val socketService: SocketService = SocketService()
     private val mapper = ObjectMapper().registerModule(KotlinModule())
 
     @Test
     fun start() {
-        socketInstance.start()
+        socketInstance.start("10.0.0.2", appContext)
         assertNotNull(socketInstance.out)
         assertNotNull(socketInstance.`in`)
         socketInstance.stop()
@@ -38,7 +40,7 @@ class SocketTest {
     fun sendRCPFormatData() {
         var params: ObjectNode = mapper.createObjectNode()
         params.put("accountId", "acc1")
-        socketService.getSocket().start()
+        socketService.getSocket().start("10.0.0.2", appContext)
         socketService.sendRCPFormatData("DescribeAccount", params, 1)
         assertNotNull(socketService.getJsonRcpObject())
         socketInstance.stop()
