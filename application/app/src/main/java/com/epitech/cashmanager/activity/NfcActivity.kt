@@ -68,12 +68,15 @@ class NfcActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                     }
                 }
                 TastyToast.makeText(
-                    NFCView.context,
+                    this,
                     errorsBuild.toString(),
                     TastyToast.LENGTH_SHORT,
                     TastyToast.ERROR
                 ).setGravity(Gravity.BOTTOM, 0, 150)
                 validateErrors.remove("errors")
+            } else {
+                TastyToast.makeText(this, "Payment Successful", TastyToast.LENGTH_LONG,
+                    TastyToast.SUCCESS)
             }
             isoDep.close()
             finish()
