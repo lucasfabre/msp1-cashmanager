@@ -1,6 +1,7 @@
 @file:Suppress("DEPRECATION", "NAME_SHADOWING")
 package com.epitech.cashmanager.services
 
+import android.util.Log
 import com.epitech.cashmanager.exceptions.ResponseRCPException
 import com.epitech.cashmanager.network.SocketInstance
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -37,6 +38,7 @@ class SocketService {
         json.put("params", params)
         json.put("id", id)
         val serializedJSON = mapper.writeValueAsString(json)
+        println("###### Out ######: " + serializedJSON)
         socket.out!!.write(serializedJSON + "\n")
         socket.out!!.flush()
     }
@@ -51,14 +53,15 @@ class SocketService {
         val deserializedJSON: ObjectNode = mapper.createObjectNode()
         try {
             var line: String? = socket.`in`!!.readLine()
+            println("###### In ######: " + line)
             if (line == null) {
                 throw Exception()
             }
             val deserializedJSON = mapper.readValue<ObjectNode>(line)
             deserializedJSON.get("method")
             if (deserializedJSON.has("error")) {
-                var code: String = deserializedJSON.get("error").asText("code")
-                var message: String = deserializedJSON.get("error").asText("message")
+                var code: String = deserializedJSON.get("error").get("code").asText()
+                var message: String = deserializedJSON.get("error").get("message").asText()
                 throw ResponseRCPException("Code: " + code + ", Message: " + message)
             }
         } catch (e: Exception) {

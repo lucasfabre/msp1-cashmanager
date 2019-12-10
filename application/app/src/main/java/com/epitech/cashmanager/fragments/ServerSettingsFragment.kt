@@ -111,14 +111,32 @@ class ServerSettingsFragment : Fragment()  {
                 }
 
                 // Socket
-                var params: ObjectNode = mapper.createObjectNode()
-                params.put("accountId", "acc1")
+                var paramsDescribe: ObjectNode = mapper.createObjectNode()
+                paramsDescribe.put("accountId", "acc1")
+                var paramsLogin: ObjectNode = mapper.createObjectNode()
+                paramsLogin.put("id", "user1")
+                paramsLogin.put("password", "p1")
+                var paramsStartTransaction: ObjectNode = mapper.createObjectNode()
+                paramsStartTransaction.put("CreditorAccountId", "acc1")
+                paramsStartTransaction.put("Amount", "3.00")
+                var paramsValidate: ObjectNode = mapper.createObjectNode()
+                paramsValidate.put("DebtorAccountId", "acc1")
 
                 socketService.getSocket().start(hostname.getText().toString(), root.context)
                 if(socketService.getSocket().clientSocket != null) {
-                    socketService.sendRCPFormatData("DescribeAccount", params, 1)
                     btnConnexion.isEnabled = false
                     println("Connected: "+ socketService.isConnected())
+                    socketService.sendRCPFormatData("Login", paramsLogin, 1)
+                    var response = socketService.getJsonRcpObject()
+                    socketService.sendRCPFormatData("DescribeAccount", paramsDescribe, 2)
+                    var response2 = socketService.getJsonRcpObject()
+
+                    /*socketService.sendRCPFormatData("StartTransaction", paramsStartTransaction, 3)
+                    var response3 = socketService.getJsonRcpObject()
+                    socketService.sendRCPFormatData("ValidateAndProcessTransaction", paramsValidate, 4)
+                    var response4 = socketService.getJsonRcpObject()
+                    */
+                    socketService.getSocket().stop()
                 }
             }
         }
